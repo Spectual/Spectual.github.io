@@ -1,75 +1,73 @@
 export const personalInfo = {
-  name: "Your Name",
-  title: "Your Professional Title",
-  email: "your.email@example.com",
-  location: "Your Location",
+  name: "Spectual",
+  title: "AI Engineer / ML Engineer",
+  email: "ukubird@gmail.com",
+  location: "Boston, MA",
   avatar: "/avatar-placeholder.png",
   social: {
-    linkedin: "https://linkedin.com/in/your-profile",
-    github: "https://github.com/your-username",
+    linkedin: "https://linkedin.com/in/yifei-bao-mscs",
+    github: "https://github.com/spectual",
   },
-  background: "I am a passionate professional with experience in developing innovative solutions. I specialize in modern technologies and have a strong background in software development and cloud platforms.",
+  background: "A Master's student in Computer Science at Boston University with strong background in AI. Experienced in developing end-to-end AI pipelines, computer vision, and machine learning algorithms.",
   skills: [
     "Python",
-    "JavaScript",
-    "TypeScript",
-    "Java",
+    "PyTorch",
     "Machine Learning",
-    "Cloud Computing",
-    "DevOps",
-    "AWS",
-    "Docker",
-    "Kubernetes",
+    "LLM Applications (Agent, RAG)",
+    "Data Science",
+    "Computer Vision",
     "Git",
-    "React"
+    "Java",
+    "Pandas",
+    "NumPy",
+    "OpenCV"
   ],
   experience: [
     {
-      title: "Senior Software Engineer",
-      company: "Tech Company",
-      duration: "2022 - Present",
-      description: "Lead development initiatives for core products, improving user engagement by 25%. Built and deployed scalable applications using modern frameworks and cloud services."
+      title: "AI Engineer Intern (Incoming)",
+      company: "DIET, Harvard University",
+      duration: "Sep 2025 – Dec 2025",
+      description: "Developing an end-to-end AI pipeline to assist in the identification of stolen ancient coins using image segmentation, embedding-based retrieval, and auction data integration."
     },
     {
-      title: "Software Engineer",
-      company: "Innovation Solutions",
-      duration: "2020 - 2022", 
-      description: "Developed web applications and APIs for various business needs. Worked with large datasets and optimized application performance."
-    },
-    {
-      title: "Junior Developer",
-      company: "Startup Inc",
-      duration: "2019 - 2020",
-      description: "Analyzed business requirements and built software solutions. Created user interfaces and backend services."
+      title: "Machine Learning Engineer Intern",
+      company: "Institute of Artificial Intelligence, Nanjing Normal University",
+      duration: "Aug 2023 - Jun 2024",
+      description: "Independently developed a diffraction-pattern recognition algorithm using computer vision and deep learning to automate RHEED image analysis, leading the end-to-end algorithm design and implementation."
     }
   ],
   projects: [
     {
-      name: "AI-Powered Chatbot Platform",
-      description: "Built an intelligent chatbot using NLP and transformer models that handles customer inquiries with 90% accuracy.",
-      technologies: ["Python", "Transformers", "FastAPI", "Docker"]
+      name: "AI and Education",
+      description: "Led the team to design modular AI solutions for educational applications, focusing on model architecture and content generation pipelines. Published paper 'A Comprehensive Investigation for ChatGPT's Applications in Education'.",
+      technologies: ["Model Architecture", "Product Design", "Content Generation"]
     },
     {
-      name: "Cloud-Native Application",
-      description: "Developed a scalable web application using microservices architecture, reducing deployment time by 60%.",
-      technologies: ["Docker", "Kubernetes", "Node.js", "MongoDB"]
+      name: "Boston Police Department Budget Analysis",
+      description: "Performed data cleaning, exploratory data analysis and visualization on BPD budget and payroll records to uncover trends in overtime spending. Built and evaluated machine learning models to predict future overtime expenditures.",
+      technologies: ["Data Analysis", "Machine Learning", "Data Visualization", "GitHub"]
     },
     {
-      name: "Data Analytics Dashboard",
-      description: "Created a comprehensive analytics dashboard for business intelligence, increasing data visibility by 20%.",
-      technologies: ["React", "Python", "Apache Spark", "Redis"]
+        name: "Machine-Vision Based Assistance System",
+        description: "Built an accessibility assistance system using YOLO-based object detection and semantic segmentation for blind pathways. Responsible for technical architecture, dataset collection, and model development.",
+        technologies: ["YOLO", "Object Detection", "Semantic Segmentation"]
+    },
+    {
+      name: "Patent: Compound Flood Disaster Prediction",
+      description: "Developed a system combining NLP, knowledge graphs, and graph-based ML to predict flood disaster distributions. (CNIPA Patent ZL202411718876.X)",
+      technologies: ["NLP", "Knowledge Graph", "Graph ML", "Patent"]
     }
   ],
   education: [
     {
-      degree: "Master of Science in Computer Science",
-      school: "University of Technology",
-      year: "2019"
+      degree: "M.S. in Computer Science",
+      school: "Boston University",
+      year: "Sep 2024 - Present"
     },
     {
-      degree: "Bachelor of Science in Computer Science",
-      school: "State University", 
-      year: "2017"
+      degree: "B.Eng. in Artificial Intelligence",
+      school: "Nanjing Normal University",
+      year: "Sep 2020 - Jun 2024"
     }
   ]
 };

@@ -1,122 +1,110 @@
 {
   "basic": {
-    "name": "Your Name",
-    "title": "Your Professional Title",
-    "email": "your.email@example.com",
-    "location": "Your Location",
-    "summary": "I am a passionate professional with experience in developing innovative solutions. I specialize in modern technologies and have a strong background in software development and cloud platforms."
+    "name": "Spectual",
+    "title": "AI Engineer / ML Engineer",
+    "email": "ukubird@gmail.com",
+    "location": "Boston, MA",
+    "summary": "A Master's student in Computer Science at Boston University with a background in AI. Experienced in developing end-to-end AI pipelines, computer vision, and machine learning algorithms. Proven ability to lead research teams and deliver full-featured software solutions. Honored with multiple scholarships and holder of a patent in flood disaster prediction."
   },
   "skills": {
-    "programmingLanguages": ["Python", "JavaScript", "TypeScript", "Java"],
-    "mlFrameworks": ["TensorFlow", "PyTorch", "Scikit-learn"],
-    "cloudPlatforms": ["AWS", "Google Cloud Platform", "Azure"],
-    "tools": ["Docker", "Kubernetes", "Git", "Jenkins"],
-    "specialties": ["Software Development", "Machine Learning", "Cloud Computing", "DevOps"]
+    "professional": "Proficient in Python, Pytorch, Machine Learning techniques. Experience in LLM Application (Agent, RAG), Data Science, Computer Vision techniques and Git-based collaborative workflows.",
+    "familiar": "Java",
+    "languages": ["English (Advanced)", "Chinese (Native)"]
   },
   "experience": [
     {
-      "title": "Senior Software Engineer",
-      "company": "Tech Company",
-      "duration": "2022 - Present",
+      "title": "AI Engineer Intern (Incoming)",
+      "company": "DIET of Harvard University",
+      "duration": "Sep 2025 – Dec 2025",
+      "description": "It's an AI Engineer / Machine Learning Engineer internship position at The Department of Digital Infrastructure and Emerging Technology (DIET) of Harvard University. The role is responsible for developing AI-based solutions and deploying reliable machine learning models for the Harvard Arts Museum.",
       "responsibilities": [
-        "Lead development initiatives for core products, improving user engagement by 25%",
-        "Built and deployed scalable applications using modern frameworks and cloud services",
-        "Mentored junior engineers and established best practices for development",
-        "Collaborated with cross-functional teams to deliver high-quality products"
+        "Developing an end-to-end AI pipeline to assist in the identification of stolen ancient coins using image segmentation, embedding-based retrieval, and auction data integration.",
+        "Designing and testing a scalable prototype bot combining computer vision (OpenCV, PyTorch) and data processing (pandas, NumPy) to match museum records with external auction listings.",
+        "Implementing automated scripts to ingest, clean, and align multimodal datasets from internal archives and public databases, enabling model training and evaluation."
       ],
-      "achievements": [
-        "Reduced application response time by 40% through optimization",
-        "Implemented CI/CD pipeline for automated testing and deployment",
-        "Led migration to cloud-based infrastructure"
-      ]
+      "achievements": []
     },
     {
-      "title": "Software Engineer",
-      "company": "Innovation Solutions",
-      "duration": "2020 - 2022",
+      "title": "Machine Learning Engineer Intern",
+      "company": "Institute of Artificial Intelligence, Nanjing Normal University",
+      "duration": "Aug 2023 - Jun 2024",
+      "description": "It's a Machine Learning Engineer internship position at the Institute of Artificial Intelligence of Nanjing Normal University. The role is responsible for developing machine learning models or computer vision models and deploying industrial models for real-world applications.",
       "responsibilities": [
-        "Developed web applications and APIs for various business needs",
-        "Worked with large datasets and optimized application performance",
-        "Implemented data pipelines for real-time processing",
-        "Conducted research on latest technologies and best practices"
+        "Independently developed a diffraction-pattern recognition algorithm using computer vision and deep learning-based target segmentation techniques to automate RHEED image analysis.",
+        "Designed and implemented a full-featured software, and led a research team to investigate technical solutions and optimize performance.",
+        "Led end-to-end algorithm design and implemented a image processing pipeline for automated analysis."
       ],
-      "achievements": [
-        "Achieved 95% test coverage on critical applications",
-        "Reduced data processing time by 60% through pipeline optimization",
-        "Published 2 technical articles on software development"
-      ]
-    },
-    {
-      "title": "Junior Developer",
-      "company": "Startup Inc",
-      "duration": "2019 - 2020",
-      "responsibilities": [
-        "Analyzed business requirements and built software solutions",
-        "Created user interfaces and backend services",
-        "Performed code reviews and participated in agile development",
-        "Collaborated with product teams to understand requirements"
-      ],
-      "achievements": [
-        "Improved application performance by 30%",
-        "Identified and fixed critical bugs leading to 15% user satisfaction increase",
-        "Automated testing processes saving 20 hours per week"
-      ]
+      "achievements": []
     }
   ],
   "projects": [
     {
-      "name": "AI-Powered Chatbot Platform",
-      "description": "Built an intelligent chatbot using NLP and transformer models that handles customer inquiries with 90% accuracy. The system can understand context, maintain conversation history, and provide personalized responses.",
-      "technologies": ["Python", "Transformers", "FastAPI", "Docker", "Redis"],
-      "impact": "Reduced customer service workload by 60% and improved customer satisfaction scores",
-      "duration": "6 months",
-      "role": "Lead Developer"
+      "name": "AI and Education",
+      "role": "Model Architect/Product Designer",
+      "adviser": "Dr. Mostow, Carnegie Mellon University",
+      "description": "Led the team to design modular AI solutions for educational applications, focusing on model architecture and content generation pipelines. Published a paper at the International Conference on Machine Learning and Automation.",
+      "technologies": ["AI Model Architecture", "Product Design", "Content Generation"],
+      "impact": "Published paper 'A Comprehensive Investigation for ChatGPT's Applications in Education' at the International Conference on Machine Learning and Automation, October 18, 2023, Oxford, UK.",
+      "duration": "",
+      "role_description": "Led the team to design modular AI solutions for educational applications, focusing on model architecture and content generation pipelines."
     },
     {
-      "name": "Cloud-Native Application",
-      "description": "Developed a scalable web application using microservices architecture, reducing deployment time by 60%. The system uses containerization and orchestration for high availability.",
-      "technologies": ["Docker", "Kubernetes", "Node.js", "MongoDB", "AWS"],
-      "impact": "Improved system reliability and reduced infrastructure costs by 40%",
-      "duration": "8 months",
-      "role": "Technical Lead"
+      "name": "Boston Police Department Budget Analysis",
+      "role": "Data Scientist/Analyst",
+      "duration": "Feb 2025-April 2025",
+      "description": "Performed data cleaning, exploratory data analysis and visualization on BPD budget and payroll records to uncover trends in overtime spending and departmental allocations. Built and evaluated machine learning models to predict future overtime expenditures.",
+      "technologies": ["Data Cleaning", "Pandas", "NumPy", "Scikit-learn", "Data Visualization"],
+      "impact": "Uncovered trends in overtime spending and departmental allocations; built predictive models for future expenditures.",
+      "role_description": "Led a collaborative team using GitHub for version control and task delegation; managed workflow and ensured smooth coordination across project components."
     },
     {
-      "name": "Data Analytics Dashboard",
-      "description": "Created a comprehensive analytics dashboard for business intelligence, increasing data visibility by 20%. The system uses modern data visualization and real-time processing.",
-      "technologies": ["React", "Python", "Apache Spark", "Redis", "PostgreSQL"],
-      "impact": "Generated $5M additional revenue through data-driven insights",
-      "duration": "4 months",
-      "role": "Full Stack Developer"
+      "name": "Machine-Vision Based Assistance System for Urban Blind Passages",
+      "role": "Data Collection and Preprocessing Specialist",
+      "duration": "Sep 2022-June 2023",
+      "description": "Built an accessibility assistance system using YOLO-based object detection and semantic segmentation for blind pathways.",
+      "technologies": ["YOLO", "Object Detection", "Semantic Segmentation", "Data Preprocessing"],
+      "impact": "Developed a functional accessibility assistance system for visually impaired individuals.",
+      "role_description": "Responsible for technical architecture, dataset collection, data preprocessing, and model development."
     }
   ],
   "education": [
     {
-      "degree": "Master of Science in Computer Science",
-      "school": "University of Technology",
-      "year": "2019",
-      "focus": "Software Engineering and Artificial Intelligence",
-      "gpa": "3.8/4.0",
-      "relevantCourses": ["Advanced Algorithms", "Machine Learning", "Software Architecture", "Database Systems"]
+      "degree": "M.S. in Computer Science",
+      "school": "Boston University",
+      "year": "Sep 2024 - Present",
+      "gpa": "3.95 / 4.0",
+      "relevantCourses": ["Machine Learning", "Deep Learning", "Data Science", "Object-oriented Software Design"]
     },
     {
-      "degree": "Bachelor of Science in Computer Science",
-      "school": "State University",
-      "year": "2017",
-      "focus": "Computer Science and Mathematics",
-      "gpa": "3.7/4.0",
-      "relevantCourses": ["Data Structures", "Algorithms", "Software Engineering", "Web Development"]
+      "degree": "B.Eng. in Artificial Intelligence",
+      "school": "Nanjing Normal University",
+      "year": "Sep 2020 - June 2024",
+      "relevantCourses": ["Database System", "Data Mining", "Natural Language Processing", "Computer Vision"]
+    }
+  ],
+  "publications": [
+    {
+      "title": "A comprehensive investigation for ChatGPT's applications in education",
+      "journal": "Applied and Computational Engineering, 35, pp.116-122, 2024",
+      "doi": "10.54254/2755-2721/35/20230377"
+    }
+  ],
+  "patents": [
+    {
+      "id": "ZL202411718876.X",
+      "title": "A Method and System for Calculating the Distribution Probability of a Compound Flood Disaster",
+      "issuer": "CNIPA Patent",
+      "date": "May 16, 2025"
     }
   ],
   "certifications": [
-    "AWS Certified Solutions Architect",
-    "Google Cloud Professional Developer",
-    "Microsoft Azure Developer Associate"
+    "Certificate of Achievement Fundamentals of Agents, Huggingface – May 2025",
+    "Prompt Engineer Certification, Datawhale and iFLYTEK - Jan 2023"
   ],
-  "interests": [
-    "Open source contributions to software libraries",
-    "Mentoring junior developers and students",
-    "Reading latest research papers in AI/ML",
-    "Hiking and outdoor photography"
+  "honors": [
+    "Merit Student Scholarship - Dec 2021",
+    "Scholarship for Outstanding Students of Nanjing Normal University - May 2021",
+    "AI Mathematical Olympiad-Progress Prize 2 Top 20% - April 2025"
   ],
-  "careerGoals": "I'm passionate about building innovative software solutions that can make a positive impact on society. I'm looking for opportunities to lead cutting-edge projects, mentor talented developers, and contribute to the advancement of technology."
+  "careerGoals": "Seeking opportunities to apply my expertise in AI and machine learning to solve challenging problems, contribute to innovative projects, and grow as a technology leader."
 } 

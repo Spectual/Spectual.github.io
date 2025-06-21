@@ -57,49 +57,91 @@ def chat():
                 'success': False
             }), 500
         
-        # Use RAG system to search for relevant context
-        try:
-            relevant_context = rag_system.search_relevant_context(message, k=3)
-            print(f"🔍 Retrieved {len(relevant_context.split('Relevant Information'))} relevant contexts")
-        except Exception as e:
-            print(f"⚠️  RAG search failed: {e}")
-            relevant_context = "Unable to retrieve relevant information"
-        
-        # Get personal information
+        # Get personal information for use in prompts
         personal_info = rag_system.get_personal_info()
-        
-        # Build system prompt
-        system_prompt = f"""You are {personal_info['name']}'s AI assistant. Answer questions about {personal_info['name']} based on the following relevant information retrieved from the knowledge base:
 
-RELEVANT CONTEXT:
+        # --- Step 1: Get Profile Summary for Initial Context ---
+        profile_summary = rag_system.get_summary_document()
+
+        # --- Step 2: Create a Refined Search Query using the LLM ---
+        query_refiner_prompt = f"""
+You are a world-class AI research assistant. Your task is to refine a user's question into a highly effective search query for a vector database.
+The user is asking about a person named {personal_info['name']}.
+Here is a high-level summary of their profile:
+---
+{profile_summary}
+---
+Based on this summary and the user's original question, generate a concise and focused search query.
+The query should be a statement or a question that is likely to find the most relevant and specific details in the knowledge base.
+For example, if the user asks "tell me about your projects", a good refined query might be "Detailed descriptions of projects like AI and Education, Boston Police Department Budget Analysis, and Machine-Vision Based Assistance System".
+Do not answer the user's question, only generate the search query.
+
+User's Original Question: "{message}"
+Refined Search Query:
+"""
+        
+        try:
+            query_refiner_response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[{"role": "system", "content": query_refiner_prompt}],
+                temperature=0,
+                max_tokens=100
+            )
+            refined_query = query_refiner_response.choices[0].message.content.strip()
+            print(f"🧠 Refined Search Query: {refined_query}")
+        except Exception as e:
+            print(f"⚠️ Query refinement failed: {e}. Falling back to original query.")
+            refined_query = message
+
+        # --- Step 3: Use the Refined Query to Search for Detailed Context ---
+        try:
+            relevant_context = rag_system.search_relevant_context(refined_query, k=4)
+            print("Retrieved relevant context: ", relevant_context)
+        except Exception as e:
+            print(f"⚠️ RAG search failed with refined query: {e}")
+            relevant_context = "Unable to retrieve relevant information from the knowledge base."
+        
+        # --- Step 4: Generate the Final Answer ---
+        final_answer_prompt = f"""You are {personal_info['name']}'s helpful and professional AI assistant.
+Your goal is to provide a comprehensive and accurate answer based on the provided information.
+
+First, here is a high-level summary of {personal_info['name']}'s profile for your general understanding:
+<SUMMARY>
+{profile_summary}
+</SUMMARY>
+
+Now, here is the user's question and the specific, detailed information retrieved from the knowledge base to help you answer it:
+<USER_QUESTION>
+{message}
+</USER_QUESTION>
+
+<DETAILED_CONTEXT>
 {relevant_context}
+</DETAILED_CONTEXT>
 
 INSTRUCTIONS:
-- Answer questions based on the relevant context above
-- If the context doesn't contain enough information, acknowledge the limitation
-- Keep responses conversational, helpful, and professional
-- Provide specific details from the context when relevant
-- If asked about something not covered in the context, offer related information you do have
-- Always respond in the same language as the user's question
+- Synthesize the information from both the SUMMARY and the DETAILED_CONTEXT to formulate your final answer.
+- Answer the user's question directly and accurately based *only* on the information provided.
+- If the detailed context does not contain the answer, you can rely on the summary. If neither contains the answer, state that you don't have enough information.
+- Always respond in the same language as the user's question.
 """
 
-        # Call OpenAI API
-        response = client.chat.completions.create(
+        # Call OpenAI API for the final answer
+        final_response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": message}
+                {"role": "system", "content": final_answer_prompt}
             ],
-            temperature=0.7,
-            max_tokens=500,
+            temperature=0.5,
+            max_tokens=1000,
         )
         
-        ai_response = response.choices[0].message.content
+        ai_response = final_response.choices[0].message.content
         
         return jsonify({
             'response': ai_response,
             'success': True,
-            'context_used': relevant_context[:200] + "..." if len(relevant_context) > 200 else relevant_context
+            'refined_query': refined_query
         })
         
     except Exception as e:
