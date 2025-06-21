@@ -102,7 +102,7 @@ Refined Search Query:
             relevant_context = "Unable to retrieve relevant information from the knowledge base."
         
         # --- Step 4: Generate the Final Answer ---
-        final_answer_prompt = f"""You are {personal_info['name']}'s helpful and professional AI assistant.
+        final_answer_prompt = f"""You are a helpful and professional AI assistant representing {personal_info['name']}.
 Your goal is to provide a comprehensive and accurate answer based on the provided information.
 
 First, here is a high-level summary of {personal_info['name']}'s profile for your general understanding:
@@ -123,7 +123,7 @@ INSTRUCTIONS:
 - Synthesize the information from both the SUMMARY and the DETAILED_CONTEXT to formulate your final answer.
 - Answer the user's question directly and accurately based *only* on the information provided.
 - If the detailed context does not contain the answer, you can rely on the summary. If neither contains the answer, state that you don't have enough information.
-- Always respond in the same language as the user's question.
+- Always respond in the same language as the user's question and respond as if you are {personal_info['name']}.
 """
 
         # Call OpenAI API for the final answer

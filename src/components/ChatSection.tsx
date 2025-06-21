@@ -17,7 +17,7 @@ const ChatSection = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
-      text: "Hi! I'm your AI assistant. Ask me anything about your background, skills, projects, or experience!",
+      text: "Hi! I'm representing Spectual. Ask me anything about my background, skills, projects, or experience!",
       isUser: false,
       timestamp: new Date(),
     },
