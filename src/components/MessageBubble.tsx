@@ -1,3 +1,4 @@
+import ReactMarkdown from 'react-markdown';
 
 interface Message {
   id: string;
@@ -20,7 +21,9 @@ const MessageBubble = ({ message }: MessageBubbleProps) => {
             : "bg-white/10 text-slate-100 border border-white/20"
         }`}
       >
-        <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.text}</p>
+        <div className="prose prose-sm prose-invert max-w-none">
+          <ReactMarkdown>{message.text}</ReactMarkdown>
+        </div>
         <p className={`text-xs mt-2 ${message.isUser ? "text-cyan-100" : "text-slate-400"}`}>
           {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </p>
