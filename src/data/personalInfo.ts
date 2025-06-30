@@ -1,7 +1,7 @@
 export const personalInfo = {
-  name: "Spectual",
-  title: "AI Engineer / ML Engineer",
-  email: "ukubird@gmail.com",
+  name: "Yifei Bao",
+  title: "AI / ML Engineer",
+  email: "baoyifei@bu.edu",
   location: "Boston, MA",
   avatar: "/avatar-placeholder.png",
   social: {

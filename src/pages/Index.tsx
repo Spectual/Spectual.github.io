@@ -1,8 +1,10 @@
-
+import { Link, useLocation } from "react-router-dom";
 import ProfileSection from "@/components/ProfileSection";
 import ChatSection from "@/components/ChatSection";
 
 const Index = () => {
+  const location = useLocation();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Animated background elements */}
@@ -17,15 +19,36 @@ const Index = () => {
         <header className="py-6 px-6">
           <nav className="max-w-6xl mx-auto">
             <div className="flex space-x-8">
-              <a href="#" className="text-cyan-400 border-b-2 border-cyan-400 pb-1 font-medium transition-colors hover:text-cyan-300">
-                Main
-              </a>
-              <a href="#" className="text-slate-400 hover:text-white transition-colors font-medium">
+              <Link 
+                to="/" 
+                className={`font-medium transition-colors ${
+                  location.pathname === "/" 
+                    ? "text-cyan-400 border-b-2 border-cyan-400 pb-1" 
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                Chat
+              </Link>
+              <Link 
+                to="/resume" 
+                className={`font-medium transition-colors ${
+                  location.pathname === "/resume" 
+                    ? "text-cyan-400 border-b-2 border-cyan-400 pb-1" 
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
                 Resume
-              </a>
-              <a href="#" className="text-slate-400 hover:text-white transition-colors font-medium">
-                Skills
-              </a>
+              </Link>
+              <Link 
+                to="/projects" 
+                className={`font-medium transition-colors ${
+                  location.pathname === "/projects" 
+                    ? "text-cyan-400 border-b-2 border-cyan-400 pb-1" 
+                    : "text-slate-400 hover:text-white"
+                }`}
+              >
+                Projects
+              </Link>
             </div>
           </nav>
         </header>

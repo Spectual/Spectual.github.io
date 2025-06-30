@@ -48,26 +48,26 @@ const ProfileSection = () => {
               {/* Social Links */}
               <div className="flex items-center justify-center lg:justify-start gap-4">
                 {personalInfo.social?.linkedin && (
-                  <a
-                    href={personalInfo.social.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 rounded-full transition-all duration-300 hover:scale-105"
-                  >
-                    <Linkedin size={20} />
-                    <span className="text-sm font-medium">LinkedIn</span>
-                  </a>
+                <a
+                  href={personalInfo.social.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 rounded-full transition-all duration-300 hover:scale-105"
+                >
+                  <Linkedin size={20} />
+                  <span className="text-sm font-medium">LinkedIn</span>
+                </a>
                 )}
                 {personalInfo.social?.github && (
-                  <a
-                    href={personalInfo.social.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-600/20 hover:bg-gray-600/30 text-gray-300 rounded-full transition-all duration-300 hover:scale-105"
-                  >
-                    <Github size={20} />
-                    <span className="text-sm font-medium">GitHub</span>
-                  </a>
+                <a
+                  href={personalInfo.social.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-600/20 hover:bg-gray-600/30 text-gray-300 rounded-full transition-all duration-300 hover:scale-105"
+                >
+                  <Github size={20} />
+                  <span className="text-sm font-medium">GitHub</span>
+                </a>
                 )}
               </div>
             </div>
