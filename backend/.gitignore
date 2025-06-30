@@ -47,6 +47,6 @@ chroma_db/
 Thumbs.db
 
 # Logs
-*.log
+*.log 
 logs/
 chat_logs_*.json 

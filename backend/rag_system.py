@@ -120,7 +120,7 @@ class RAGSystem:
         preventing content overlap and duplication.
         """
         documents = []
-
+        
         # Basic Info as a single document
         basic_info_parts = [
             f"Name: {data['basic']['name']}",
@@ -148,7 +148,7 @@ class RAGSystem:
             exp_content = f"""Position: {exp.get('title', 'N/A')} at {exp.get('company', 'N/A')} ({exp.get('duration', 'N/A')}).
 Responsibilities: {'; '.join(exp.get('responsibilities', []))}"""
             documents.append(Document(page_content=exp_content, metadata={"type": "experience", "company": exp.get('company', 'N/A')}))
-
+        
         # Each Project as a separate document
         for i, proj in enumerate(data.get('projects', [])):
             proj_content = f"""Project: {proj.get('name', 'N/A')}.
@@ -168,7 +168,7 @@ Relevant Courses: {', '.join(edu.get('relevantCourses', []))}"""
         if data.get('publications'):
             pub_titles = [f"'{p.get('title', 'N/A')}'" for p in data.get('publications', [])]
             documents.append(Document(page_content=f"Authored publications including: {', '.join(pub_titles)}", metadata={"type": "publications"}))
-
+        
         if data.get('patents'):
             patent_titles = [f"'{p.get('title', 'N/A')}'" for p in data.get('patents', [])]
             documents.append(Document(page_content=f"Holds patents including: {', '.join(patent_titles)}", metadata={"type": "patents"}))
@@ -178,7 +178,7 @@ Relevant Courses: {', '.join(edu.get('relevantCourses', []))}"""
         
         if data.get('honors'):
             documents.append(Document(page_content=f"Honors and Awards: {', '.join(data.get('honors', []))}", metadata={"type": "honors"}))
-
+        
         return documents
     
     def build_vectorstore(self):
@@ -211,7 +211,7 @@ Relevant Courses: {', '.join(edu.get('relevantCourses', []))}"""
         Returns the cached high-level summary text.
         """
         return self.profile_summary
-
+    
     def search_relevant_context(self, query: str, k: int = 5) -> str:
         """
         Search for relevant context using Maximal Marginal Relevance (MMR)
@@ -257,4 +257,4 @@ Relevant Courses: {', '.join(edu.get('relevantCourses', []))}"""
         return {
             "name": data['basic']['name'],
             "title": data['basic']['title']
-        }
+        } 
