@@ -9,14 +9,13 @@ const ProfileSection = () => {
           <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8">
             {/* Avatar */}
             <div className="relative flex-shrink-0">
-              <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-full bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 p-1 shadow-2xl">
+              <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-full bg-gradient-to-r from-cyan-400 via-emerald-500 to-blue-500 p-1 shadow-2xl">
                 <img
                   src={personalInfo.avatar}
                   alt={personalInfo.name}
                   className="w-full h-full rounded-full object-cover bg-gray-200"
                 />
               </div>
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-400/30 via-purple-500/30 to-pink-500/30 animate-pulse"></div>
             </div>
 
             {/* Info */}
@@ -24,7 +23,7 @@ const ProfileSection = () => {
               <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-white to-cyan-400 bg-clip-text text-transparent mb-3">
                 {personalInfo.name}
               </h1>
-              <p className="text-xl lg:text-2xl text-purple-300 mb-4 font-medium">
+              <p className="text-xl lg:text-2xl text-emerald-300 mb-4 font-medium">
                 {personalInfo.title}
               </p>
               
