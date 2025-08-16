@@ -9,7 +9,8 @@ export const API_CONFIG = {
   
   ENDPOINTS: {
     CHAT: '/api/chat',
-    HEALTH: '/api/health'
+    HEALTH: '/api/health',
+    CONTACT: '/api/contact'
   }
 };
 

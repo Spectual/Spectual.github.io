@@ -27,9 +27,19 @@ const ChatSection = () => {
   const [isServerOnline, setIsServerOnline] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const isInitialLoad = useRef(true);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  const isNearBottom = (): boolean => {
+    const el = scrollContainerRef.current;
+    if (!el) return true;
+    const threshold = 80; // px
+    return el.scrollHeight - el.scrollTop - el.clientHeight < threshold;
+  };
+
+  const scrollChatToBottom = () => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -37,7 +47,10 @@ const ChatSection = () => {
       isInitialLoad.current = false;
       return;
     }
-    scrollToBottom();
+    // Only auto-scroll if user is near bottom (reading latest) to avoid jumping to Get In Touch
+    if (isNearBottom()) {
+      scrollChatToBottom();
+    }
   }, [messages]);
 
   const predefinedQuestions = [
@@ -82,6 +95,8 @@ const ChatSection = () => {
     setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
     setIsLoading(true);
+    // When the sender is the user, always scroll the chat container to bottom
+    requestAnimationFrame(scrollChatToBottom);
 
     try {
       const response = await sendMessage(messageText);
@@ -163,7 +178,7 @@ const ChatSection = () => {
           </div>
 
           {/* Chat Messages */}
-          <div className="h-96 overflow-y-auto p-6 space-y-4 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
+          <div ref={scrollContainerRef} className="h-96 overflow-y-auto p-6 space-y-4 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
             {messages.map((message) => (
               <MessageBubble key={message.id} message={message} />
             ))}
@@ -182,20 +197,20 @@ const ChatSection = () => {
           </div>
 
           {/* Input Area */}
-          <div className="p-6 bg-gradient-to-r from-slate-800/20 to-purple-800/20 border-t border-white/10">
+          <div className="p-6 bg-slate-900/30 border-t border-white/10">
             <div className="flex gap-3 mb-4">
               <Input
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder="Ask me anything about my background..."
-                className="bg-white/10 border-white/20 text-white placeholder:text-slate-400 backdrop-blur-sm rounded-xl"
+                className="bg-slate-800/50 border-white/10 text-white placeholder:text-slate-400 backdrop-blur-sm rounded-xl"
                 disabled={isLoading || !isServerOnline}
               />
               <Button
                 onClick={() => handleSendMessage(inputValue)}
                 disabled={isLoading || !inputValue.trim() || !isServerOnline}
-                className="bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 rounded-xl px-6"
+                className="rounded-xl px-6 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/30"
               >
                 <ArrowRight size={18} />
               </Button>

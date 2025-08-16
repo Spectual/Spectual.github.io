@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import ProfileSection from "@/components/ProfileSection";
 import ChatSection from "@/components/ChatSection";
+import GetInTouchSection from "@/components/GetInTouchSection";
 
 const Index = () => {
   const location = useLocation();
@@ -58,6 +59,9 @@ const Index = () => {
 
         {/* Chat Section */}
         <ChatSection />
+
+        {/* Get In Touch Section */}
+        <GetInTouchSection />
       </div>
     </div>
   );
