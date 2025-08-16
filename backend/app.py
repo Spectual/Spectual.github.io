@@ -470,6 +470,43 @@ def logs_viewer():
     except Exception as e:
         return f"<h1>Error loading logs: {str(e)}</h1>"
 
+# --- New: Contact form submission endpoint ---
+@app.route('/api/contact', methods=['POST'])
+def contact_submit():
+    try:
+        data = request.get_json(force=True)
+        name = (data.get('name') or '').strip()
+        company = (data.get('company') or '').strip()
+        email = (data.get('email') or '').strip()
+        message = (data.get('message') or '').strip()
+        if not name or not email or not message:
+            return jsonify({'success': False, 'error': 'name, email and message are required'}), 400
+        entry = {
+            'timestamp': datetime.now().isoformat(),
+            'name': name,
+            'company': company,
+            'email': email,
+            'message': message,
+            'ip_address': request.remote_addr,
+            'user_agent': request.headers.get('User-Agent', 'Unknown')
+        }
+        contacts_file = logs_dir / f'contacts_{datetime.now().strftime("%Y-%m-%d")}.json'
+        try:
+            if contacts_file.exists():
+                with open(contacts_file, 'r', encoding='utf-8') as f:
+                    contacts = json.load(f)
+            else:
+                contacts = []
+            contacts.append(entry)
+            with open(contacts_file, 'w', encoding='utf-8') as f:
+                json.dump(contacts, f, indent=2, ensure_ascii=False)
+        except Exception as e:
+            logging.error(f"Failed to write contact file: {e}")
+        return jsonify({'success': True, 'message': 'Contact received'})
+    except Exception as e:
+        logging.error(f"Error in contact_submit: {e}")
+        return jsonify({'success': False, 'error': 'Failed to submit contact'}), 500
+
 if __name__ == '__main__':
     print("🚀 Starting AI Assistant Backend with RAG...")
     print(f"📡 API Key Status: {'✅ Configured' if api_key else '❌ Not configured'}")
@@ -482,6 +519,7 @@ if __name__ == '__main__':
     print("   - GET  /api/logs - View chat logs (with optional date/user_id filters)")
     print("   - GET  /api/logs/stats - Get chat usage statistics")
     print("   - GET  /logs - Web interface to view chat logs")
+    print("   - POST /api/contact - Receive contact form submissions")
     print("📝 Message logging is enabled - logs saved to logs/ directory")
     print("\n💡 Make sure to set OPENAI_API_KEY environment variable")
     app.run(debug=True, host='0.0.0.0', port=5001) 

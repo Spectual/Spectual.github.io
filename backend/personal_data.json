@@ -2,7 +2,7 @@
   "basic": {
     "name": "Yifei Bao",
     "title": "AI Engineer / ML Engineer",
-    "email": "baoyfiei@bu.edu",
+    "email": "baoyifei@bu.edu",
     "location": "Boston, MA",
     "summary": "A Master's student in Computer Science at Boston University with a background in AI. Experienced in developing end-to-end AI pipelines, computer vision, and machine learning algorithms. Proven ability to lead research teams and deliver full-featured software solutions. Honored with multiple scholarships and holder of a patent in flood disaster prediction."
   },
@@ -13,26 +13,26 @@
   },
   "experience": [
     {
-      "title": "AI Engineer Intern (Incoming)",
-      "company": "DIET of Harvard University",
-      "duration": "Sep 2025 – Dec 2025",
-      "description": "It's an AI Engineer / Machine Learning Engineer internship position at The Department of Digital Infrastructure and Emerging Technology (DIET) of Harvard University. The role is responsible for developing AI-based solutions and deploying reliable machine learning models for the Harvard Arts Museum.",
+      "title": "AI Engineer Intern",
+      "company": "DIET, Harvard University",
+      "duration": "Aug 2025 – Present",
+      "location": "Cambridge, MA",
+      "description": "Architecting agentic systems and fine-tuning multimodal VLMs for artwork analysis at Harvard Arts Museum.",
       "responsibilities": [
-        "Developing an end-to-end AI pipeline to assist in the identification of stolen ancient coins using image segmentation, embedding-based retrieval, and auction data integration.",
-        "Designing and testing a scalable prototype bot combining computer vision (OpenCV, PyTorch) and data processing (pandas, NumPy) to match museum records with external auction listings.",
-        "Implementing automated scripts to ingest, clean, and align multimodal datasets from internal archives and public databases, enabling model training and evaluation."
+        "Agentic System: Architected an interactive artwork image analysis agent that processes user-uploaded images, using an LLM-based planner to dynamically orchestrate 20+ vision & language models/APIs (Qwen-VL, BLIP-2, GPT-4o, Gemini, YOLOv8), producing structured metadata and descriptions; cut inference costs by 40% per request and improved speed by 58%.",
+        "VLM Fine-Tuning: Fine-tuned a multimodal VLM (Qwen2.5-VL-7B) on the human-annotated artwork description dataset using SFT with LoRA techniques, using training optimization strategies such as warm-up scheduling, cosine LR decay, BF16 mixed precision training, and gradient accumulation. Applied multimodal models (ViT, Qwen-VL) on 385K+ high-resolution artwork images, generating 70M+ tags/descriptions."
       ],
       "achievements": []
     },
     {
       "title": "Machine Learning Engineer Intern",
       "company": "Institute of Artificial Intelligence, Nanjing Normal University",
-      "duration": "Aug 2023 - Jun 2024",
-      "description": "It's a Machine Learning Engineer internship position at the Institute of Artificial Intelligence of Nanjing Normal University. The role is responsible for developing machine learning models or computer vision models and deploying industrial models for real-world applications.",
+      "duration": "Aug 2023 – Jun 2024",
+      "location": "Nanjing, China",
+      "description": "Designed and delivered a production-grade computer vision system for RHEED image analysis and lab automation.",
       "responsibilities": [
-        "Independently developed a diffraction-pattern recognition algorithm using computer vision and deep learning-based target segmentation techniques to automate RHEED image analysis.",
-        "Designed and implemented a full-featured software, and led a research team to investigate technical solutions and optimize performance.",
-        "Led end-to-end algorithm design and implemented a image processing pipeline for automated analysis."
+        "Computer Vision System: Designed a computer vision–based RHEED image analysis system achieving 97% pattern recognition accuracy by integrating SAM-assisted segmentation annotation, YOLO-based segmentation, and thresholding for key feature extraction.",
+        "Team Leadership & Cost Savings: Led a 6-member team to deliver a production-grade software for lab automation; reduced manual inspection time by 80% via AI-driven anomaly detection and structured logging, saving $11k/month ($132k/year) in labor costs."
       ],
       "achievements": []
     }
@@ -56,6 +56,24 @@
       "technologies": ["Data Cleaning", "Pandas", "NumPy", "Scikit-learn", "Data Visualization"],
       "impact": "Uncovered trends in overtime spending and departmental allocations; built predictive models for future expenditures.",
       "role_description": "Led a collaborative team using GitHub for version control and task delegation; managed workflow and ensured smooth coordination across project components."
+    },
+    {
+      "name": "Interactive Artwork Image Analysis Agent",
+      "role": "AI Engineer Intern at DIET, Harvard University",
+      "duration": "Aug 2025 – Present",
+      "description": "Architected an agentic system that orchestrates 20+ V&L models/APIs to analyze user-uploaded artwork images, generating structured metadata and descriptions while reducing cost by 40% and improving speed by 58%.",
+      "technologies": ["Agentic System", "Qwen-VL", "BLIP-2", "GPT-4o", "Gemini", "YOLOv8"],
+      "impact": "Production-ready pipeline with significant latency and cost improvements.",
+      "role_description": "System architecture, model orchestration, evaluation, and optimization."
+    },
+    {
+      "name": "Multimodal VLM Fine-Tuning for Artwork Description",
+      "role": "AI Engineer Intern at DIET, Harvard University",
+      "duration": "Aug 2025 – Present",
+      "description": "Fine-tuned Qwen2.5-VL-7B with LoRA on curated artwork datasets; leveraged ViT and Qwen-VL across 385K+ images to generate 70M+ tags/descriptions with optimized training strategies (warm-up, cosine decay, BF16, grad accumulation).",
+      "technologies": ["Qwen2.5-VL-7B", "LoRA", "SFT", "BF16", "Cosine LR Decay", "Warm-up", "Gradient Accumulation", "ViT"],
+      "impact": "Large-scale multimodal tagging and description generation.",
+      "role_description": "Data curation, fine-tuning, evaluation, and deployment."
     },
     {
       "name": "Machine-Vision Based Assistance System for Urban Blind Passages",
