@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,8 +18,7 @@ const GetInTouchSection = () => {
       toast({ title: "Email is required" });
       return false;
     }
-    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email);
-    if (!emailOk) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
       toast({ title: "Please enter a valid email" });
       return false;
     }
@@ -35,19 +34,20 @@ const GetInTouchSection = () => {
     if (!validate()) return;
     setSubmitting(true);
 
-    const subject = encodeURIComponent(`Website Contact from ${form.name}${form.company ? ' - ' + form.company : ''}`);
-    const bodyLines = [
-      `Name: ${form.name}`,
-      `Company: ${form.company || 'N/A'}`,
-      `Email: ${form.email}`,
-      "",
-      "Message:",
-      form.message,
-    ];
-    const body = encodeURIComponent(bodyLines.join("\n"));
-    const mailto = `mailto:baoyifei@bu.edu?subject=${subject}&body=${body}`;
-
-    window.location.href = mailto;
+    const subject = encodeURIComponent(
+      `Website Contact from ${form.name}${form.company ? " - " + form.company : ""}`
+    );
+    const body = encodeURIComponent(
+      [
+        `Name: ${form.name}`,
+        `Company: ${form.company || "N/A"}`,
+        `Email: ${form.email}`,
+        "",
+        "Message:",
+        form.message,
+      ].join("\n")
+    );
+    window.location.href = `mailto:baoyifei@bu.edu?subject=${subject}&body=${body}`;
     setSubmitting(false);
   };
 
@@ -56,88 +56,105 @@ const GetInTouchSection = () => {
       <div className="max-w-6xl mx-auto">
         <div className="backdrop-blur-xl bg-white/10 rounded-3xl border border-white/20 p-8 shadow-2xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            {/* Form side */}
             <div>
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-white to-cyan-400 bg-clip-text text-transparent mb-6">
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-white to-cyan-400 bg-clip-text text-transparent mb-2">
                 Get in Touch
               </h2>
-              <form onSubmit={handleSubmit} className="space-y-6">
+              {/* mailto notice */}
+              <p className="text-slate-400 text-sm mb-6 flex items-center gap-1.5">
+                <ExternalLink size={13} className="shrink-0 text-slate-500" />
+                Clicking "Send" will open your default email client with the form pre-filled.
+              </p>
+
+              <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-slate-300 text-sm mb-2">Name *</label>
+                    <label className="block text-slate-300 text-sm mb-1.5 font-medium">Name <span className="text-red-400">*</span></label>
                     <Input
                       placeholder="Your name"
                       value={form.name}
                       onChange={(e) => setForm({ ...form, name: e.target.value })}
+                      className="bg-slate-800/60 border-white/10 text-white placeholder:text-slate-500 focus-visible:ring-cyan-500/50"
                     />
                   </div>
                   <div>
-                    <label className="block text-slate-300 text-sm mb-2">Company</label>
+                    <label className="block text-slate-300 text-sm mb-1.5 font-medium">Company</label>
                     <Input
                       placeholder="Company (optional)"
                       value={form.company}
                       onChange={(e) => setForm({ ...form, company: e.target.value })}
+                      className="bg-slate-800/60 border-white/10 text-white placeholder:text-slate-500 focus-visible:ring-cyan-500/50"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-slate-300 text-sm mb-2">Email *</label>
+                  <label className="block text-slate-300 text-sm mb-1.5 font-medium">Email <span className="text-red-400">*</span></label>
                   <Input
                     type="email"
                     placeholder="you@example.com"
                     value={form.email}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    className="bg-slate-800/60 border-white/10 text-white placeholder:text-slate-500 focus-visible:ring-cyan-500/50"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-300 text-sm mb-2">Message *</label>
+                  <label className="block text-slate-300 text-sm mb-1.5 font-medium">Message <span className="text-red-400">*</span></label>
                   <Textarea
                     placeholder="Tell me about your needs and how I can help..."
-                    rows={6}
+                    rows={5}
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
+                    className="bg-slate-800/60 border-white/10 text-white placeholder:text-slate-500 focus-visible:ring-cyan-500/50 resize-none"
                   />
                 </div>
-                <div>
-                  <Button type="submit" disabled={submitting} className="bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-300 border border-cyan-500/30">
-                    {submitting ? "Opening email..." : "Send Message"}
-                  </Button>
-                </div>
+                <Button
+                  type="submit"
+                  disabled={submitting}
+                  className="bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-300 border border-cyan-500/30 rounded-xl px-6 transition-all duration-200 hover:scale-[1.02]"
+                >
+                  {submitting ? "Opening email client…" : "Send Message"}
+                </Button>
               </form>
             </div>
 
+            {/* Contact info side */}
             <div className="space-y-6">
-              <h3 className="text-2xl font-semibold text-white">Let's Start a Conversation</h3>
-              <p className="text-slate-300">
-                I'm happy to connect about opportunities, collaboration, or any interesting ideas.
-              </p>
-              <div className="space-y-4">
-                <div className="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="p-3 rounded-lg bg-cyan-600/20">
-                    <Mail className="text-cyan-400" />
+              <div>
+                <h3 className="text-2xl font-semibold text-white mb-2">Let's Start a Conversation</h3>
+                <p className="text-slate-400 text-sm">
+                  Happy to connect about opportunities, collaboration, or any interesting ideas.
+                </p>
+              </div>
+              <div className="space-y-3">
+                {[
+                  {
+                    icon: <Mail className="text-cyan-400" />,
+                    bg: "bg-cyan-600/20",
+                    label: "Email",
+                    content: <a href="mailto:baoyifei@bu.edu" className="text-white hover:text-cyan-300 transition-colors text-sm">baoyifei@bu.edu</a>,
+                  },
+                  {
+                    icon: <Phone className="text-emerald-400" />,
+                    bg: "bg-emerald-600/20",
+                    label: "Phone",
+                    content: <a href="tel:+18573403064" className="text-white hover:text-emerald-300 transition-colors text-sm">+1 857 340 3064</a>,
+                  },
+                  {
+                    icon: <MapPin className="text-blue-400" />,
+                    bg: "bg-blue-600/20",
+                    label: "Location",
+                    content: <span className="text-white text-sm">Boston, MA</span>,
+                  },
+                ].map(({ icon, bg, label, content }) => (
+                  <div key={label} className="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all duration-200">
+                    <div className={`p-2.5 rounded-lg ${bg} shrink-0`}>{icon}</div>
+                    <div>
+                      <div className="text-slate-500 text-xs mb-0.5">{label}</div>
+                      {content}
+                    </div>
                   </div>
-                  <div>
-                    <div className="text-slate-400 text-sm">Email</div>
-                    <a href="mailto:baoyifei@bu.edu" className="text-white">baoyifei@bu.edu</a>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="p-3 rounded-lg bg-emerald-600/20">
-                    <Phone className="text-emerald-400" />
-                  </div>
-                  <div>
-                    <div className="text-slate-400 text-sm">Phone</div>
-                    <a href="tel:+18573403064" className="text-white">+1 8573403064</a>
-                  </div>
-                </div>
-                <div className="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10">
-                  <div className="p-3 rounded-lg bg-blue-600/20">
-                    <MapPin className="text-blue-400" />
-                  </div>
-                  <div>
-                    <div className="text-slate-400 text-sm">Office</div>
-                    <div className="text-white">Boston</div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
@@ -147,4 +164,4 @@ const GetInTouchSection = () => {
   );
 };
 
-export default GetInTouchSection; 
+export default GetInTouchSection;

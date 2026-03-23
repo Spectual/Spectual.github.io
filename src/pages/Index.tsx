@@ -55,13 +55,19 @@ const Index = () => {
         </header>
 
         {/* Profile Section */}
-        <ProfileSection />
+        <div className="animate-fade-in-up">
+          <ProfileSection />
+        </div>
 
         {/* Chat Section */}
-        <ChatSection />
+        <div className="animate-fade-in-up-delay-1">
+          <ChatSection />
+        </div>
 
         {/* Get In Touch Section */}
-        <GetInTouchSection />
+        <div className="animate-fade-in-up-delay-2">
+          <GetInTouchSection />
+        </div>
       </div>
     </div>
   );
