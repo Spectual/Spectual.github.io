@@ -127,37 +127,34 @@ const ChatSection = () => {
   };
 
   return (
-    <section className="px-6 pb-12">
+    <section className="px-6 pb-8">
       <div className="max-w-4xl mx-auto">
-        <div className="backdrop-blur-xl bg-white/10 rounded-3xl border border-white/20 shadow-2xl overflow-hidden">
+        <div className="bg-stone-900 rounded-2xl border border-stone-800 overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-purple-600/20 to-cyan-600/20 p-6 border-b border-white/10">
-            <div className="flex items-center gap-4">
-              <div className="w-11 h-11 bg-gradient-to-br from-cyan-400 to-purple-500 rounded-xl flex items-center justify-center shadow-lg shadow-cyan-900/30 shrink-0">
-                <Bot className="text-white" size={22} />
+          <div className="bg-stone-900 p-5 border-b border-stone-800">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 bg-stone-800 border border-stone-700 rounded-xl flex items-center justify-center shrink-0">
+                <Bot className="text-[#cf6b47]" size={18} />
               </div>
               <div className="flex-1 min-w-0">
-                <h2 className="text-xl font-bold text-white">Ask Anything About Me</h2>
-                <p className="text-slate-400 text-sm">Powered by RAG · instant answers about background & projects</p>
+                <h2 className="text-base font-semibold text-stone-100">Ask Anything About Me</h2>
+                <p className="text-stone-500 text-xs">Powered by RAG · instant answers about background & projects</p>
               </div>
               {/* Server status pill */}
-              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border ${
+              <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${
                 isServerOnline
-                  ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-300"
-                  : "bg-red-500/10 border-red-500/20 text-red-300"
+                  ? "bg-emerald-950/60 border-emerald-800/50 text-emerald-400"
+                  : "bg-red-950/60 border-red-800/50 text-red-400"
               }`}>
-                {isServerOnline
-                  ? <Wifi size={12} />
-                  : <WifiOff size={12} />
-                }
+                {isServerOnline ? <Wifi size={11} /> : <WifiOff size={11} />}
                 {isServerOnline ? "Online" : "Offline"}
               </div>
             </div>
 
             {!isServerOnline && (
-              <div className="mt-4 bg-red-500/10 rounded-xl p-3 border border-red-500/20 flex items-center gap-3">
-                <AlertCircle className="text-red-400 shrink-0" size={16} />
-                <p className="text-sm text-red-300">AI server is offline. Responses may be unavailable.</p>
+              <div className="mt-3 bg-red-950/40 rounded-xl p-3 border border-red-900/50 flex items-center gap-2.5">
+                <AlertCircle className="text-red-400 shrink-0" size={15} />
+                <p className="text-sm text-red-400">AI server is offline. Responses may be unavailable.</p>
               </div>
             )}
           </div>
@@ -165,18 +162,18 @@ const ChatSection = () => {
           {/* Messages */}
           <div
             ref={scrollContainerRef}
-            className="h-96 overflow-y-auto p-6 space-y-4 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent"
+            className="h-96 overflow-y-auto p-5 space-y-4 scrollbar-thin scrollbar-thumb-stone-700 scrollbar-track-transparent"
           >
             {messages.map((message) => (
               <MessageBubble key={message.id} message={message} />
             ))}
             {isLoading && (
               <div className="flex justify-start">
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-5 py-3">
+                <div className="bg-stone-800 rounded-2xl px-4 py-3 border border-stone-700/60">
                   <div className="flex space-x-1.5 items-center">
-                    <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                    <div className="w-2 h-2 bg-pink-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                    <div className="w-1.5 h-1.5 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                    <div className="w-1.5 h-1.5 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                    <div className="w-1.5 h-1.5 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
                   </div>
                 </div>
               </div>
@@ -185,36 +182,36 @@ const ChatSection = () => {
           </div>
 
           {/* Input + Chips */}
-          <div className="p-6 bg-slate-900/30 border-t border-white/10 space-y-4">
+          <div className="p-5 bg-stone-950/50 border-t border-stone-800 space-y-3">
             {/* Input row */}
-            <div className="flex gap-3">
+            <div className="flex gap-2">
               <Input
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyPress}
                 placeholder="Ask me anything about my background..."
-                className="bg-slate-800/60 border-white/10 text-white placeholder:text-slate-500 backdrop-blur-sm rounded-xl focus-visible:ring-cyan-500/50"
+                className="bg-stone-800 border-stone-700 text-stone-100 placeholder:text-stone-500 rounded-xl focus-visible:ring-[#cf6b47]/40 focus-visible:border-stone-600"
                 disabled={isLoading || !isServerOnline}
               />
               <Button
                 onClick={() => handleSendMessage(inputValue)}
                 disabled={isLoading || !inputValue.trim() || !isServerOnline}
-                className="rounded-xl px-4 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/30 transition-all duration-200 disabled:opacity-40"
+                className="rounded-xl px-3.5 bg-[#cf6b47]/20 hover:bg-[#cf6b47]/30 text-[#cf6b47] border border-[#cf6b47]/30 hover:border-[#cf6b47]/50 transition-all duration-150 disabled:opacity-40"
               >
-                <Send size={16} />
+                <Send size={15} />
               </Button>
             </div>
 
-            {/* Predefined question chips — flex-wrap */}
+            {/* Predefined question chips */}
             <div>
-              <p className="text-xs text-slate-500 mb-2 font-medium uppercase tracking-wide">Try asking</p>
-              <div className="flex flex-wrap gap-2">
+              <p className="text-xs text-stone-600 mb-2 font-medium uppercase tracking-wider">Try asking</p>
+              <div className="flex flex-wrap gap-1.5">
                 {PREDEFINED_QUESTIONS.map((question, index) => (
                   <button
                     key={index}
                     onClick={() => handleSendMessage(question)}
                     disabled={isLoading || !isServerOnline}
-                    className="px-3 py-1.5 text-xs bg-white/5 hover:bg-white/10 border border-white/10 hover:border-cyan-500/30 text-slate-300 hover:text-white rounded-full transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="px-3 py-1.5 text-xs border border-stone-700 text-stone-400 hover:border-stone-600 hover:text-stone-300 rounded-full transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     {question}
                   </button>
