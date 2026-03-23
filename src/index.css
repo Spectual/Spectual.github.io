@@ -101,3 +101,33 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Fade-in slide-up animation for sections */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.animate-fade-in-up-delay-1 {
+  animation: fadeInUp 0.6s ease-out 0.15s both;
+}
+
+.animate-fade-in-up-delay-2 {
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+/* Subtle glow on focus-visible for accessibility */
+.glow-focus:focus-visible {
+  outline: 2px solid theme('colors.cyan.400');
+  outline-offset: 2px;
+}

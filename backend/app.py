@@ -76,6 +76,18 @@ def get_user_id():
         session_id = str(uuid.uuid4())
     return session_id
 
+# Admin API key for protected endpoints
+admin_api_key = os.getenv('ADMIN_API_KEY')
+
+def require_admin_key():
+    """Check ADMIN_API_KEY header. Returns error response or None if ok."""
+    if not admin_api_key:
+        return jsonify({'error': 'ADMIN_API_KEY not configured on server', 'success': False}), 500
+    provided = request.headers.get('X-Admin-Key') or request.args.get('admin_key')
+    if provided != admin_api_key:
+        return jsonify({'error': 'Unauthorized', 'success': False}), 401
+    return None
+
 # Get OpenAI API key from environment variables and create client
 api_key = os.getenv('OPENAI_API_KEY')
 client = OpenAI(api_key=api_key) if api_key else None
@@ -246,6 +258,9 @@ def health_check():
 @app.route('/api/rebuild-vectorstore', methods=['POST'])
 def rebuild_vectorstore():
     """Rebuild vector database"""
+    auth_error = require_admin_key()
+    if auth_error:
+        return auth_error
     try:
         if not api_key:
             return jsonify({
@@ -272,6 +287,9 @@ def rebuild_vectorstore():
 @app.route('/api/logs', methods=['GET'])
 def get_logs():
     """Get chat logs with optional filtering"""
+    auth_error = require_admin_key()
+    if auth_error:
+        return auth_error
     try:
         # Get query parameters
         date = request.args.get('date')  # Format: YYYY-MM-DD
@@ -320,6 +338,9 @@ def get_logs():
 @app.route('/api/logs/stats', methods=['GET'])
 def get_log_stats():
     """Get statistics about chat usage"""
+    auth_error = require_admin_key()
+    if auth_error:
+        return auth_error
     try:
         # Get all log files
         log_files = list(logs_dir.glob('chat_logs_*.json'))

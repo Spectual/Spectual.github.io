@@ -2,23 +2,52 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/my-icon.png" />
+    <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Yifei's Profile" />
+    <meta name="description" content="Yifei Bao — AI/ML Engineer at Boston University. Chat with an AI assistant to learn about my background, projects, and experience." />
     <meta name="author" content="Yifei Bao" />
-    <title>Yifei's Profile</title>
-    
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:description" content="Yifei's Profile - Chat with me!" />
-    <meta property="og:title" content="Yifei's Profile" />
-    <meta property="og:image" content="/my-icon.png" />
-    
+    <title>Yifei Bao · AI/ML Engineer</title>
+
+    <!-- Open Graph / Social sharing -->
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content="Yifei Bao · AI/ML Engineer" />
+    <meta property="og:description" content="Chat with an AI to learn about Yifei's background, projects, and experience." />
+    <meta property="og:image" content="/og-image.webp" />
+    <meta property="og:url" content="https://spectual.github.io" />
+
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:title" content="Yifei's Profile" />
-    <meta property="twitter:description" content="Yifei's Profile - Chat with me!" />
-    <meta property="twitter:image" content="/my-icon.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Yifei Bao · AI/ML Engineer" />
+    <meta name="twitter:description" content="Chat with an AI to learn about Yifei's background, projects, and experience." />
+    <meta name="twitter:image" content="/og-image.webp" />
+
+    <!-- Schema.org Person structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Yifei Bao",
+      "jobTitle": "AI / ML Engineer",
+      "email": "baoyifei@bu.edu",
+      "url": "https://spectual.github.io",
+      "image": "https://spectual.github.io/avatar.webp",
+      "alumniOf": [
+        {
+          "@type": "CollegeOrUniversity",
+          "name": "Boston University"
+        },
+        {
+          "@type": "CollegeOrUniversity",
+          "name": "Nanjing Normal University"
+        }
+      ],
+      "sameAs": [
+        "https://linkedin.com/in/yifei-bao-mscs",
+        "https://github.com/spectual"
+      ],
+      "knowsAbout": ["Machine Learning", "Computer Vision", "LLM", "RAG", "PyTorch", "Python"]
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>
