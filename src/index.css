@@ -163,3 +163,81 @@
 .terminal-scroll::-webkit-scrollbar-thumb:hover {
   background: var(--term-dim);
 }
+
+/* Boot sequence line fade-in */
+@keyframes fadeInLine {
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Page enter flash */
+@keyframes pageEnter {
+  0%   { opacity: 0; filter: brightness(4); }
+  8%   { opacity: 1; filter: brightness(1.4); }
+  20%  { filter: brightness(1); }
+  100% { opacity: 1; filter: brightness(1); }
+}
+
+.page-enter {
+  animation: pageEnter 0.35s ease-out both;
+}
+
+/* Glitch animation for project card titles */
+@keyframes glitch {
+  0%   { transform: translate(0); }
+  15%  { transform: translate(-3px, 1px); clip-path: inset(0 0 80% 0); }
+  16%  { transform: translate(3px, -1px); clip-path: inset(60% 0 0 0); }
+  17%  { transform: translate(0); clip-path: none; }
+  45%  { transform: translate(0); }
+  50%  { transform: translate(2px, -1px); }
+  55%  { transform: translate(-2px, 1px); }
+  60%  { transform: translate(0); }
+  100% { transform: translate(0); }
+}
+
+.project-card:hover .glitch-title {
+  animation: glitch 0.45s cubic-bezier(.25,.46,.45,.94);
+  display: inline-block;
+}
+
+/* Nav tab hover: invert effect */
+.nav-tab:hover:not(.nav-active) {
+  color: var(--term-text) !important;
+  background-color: var(--term-bg2) !important;
+}
+
+/* Link underline slide animation */
+.slide-underline {
+  position: relative;
+  text-decoration: none;
+}
+.slide-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0%;
+  height: 1px;
+  background-color: var(--term-green);
+  transition: width 0.25s ease;
+}
+.slide-underline:hover::after {
+  width: 100%;
+}
+
+/* Skills bar fill animation */
+@keyframes barFill {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+.skill-bar-fill {
+  animation: barFill 1s ease-out both;
+}
+
+/* Neural network thinking pulse */
+@keyframes neuralPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+

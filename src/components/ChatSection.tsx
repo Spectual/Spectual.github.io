@@ -20,6 +20,45 @@ const PREDEFINED_QUESTIONS = [
   "Any patents or publications?",
 ];
 
+// ── Neural network thinking indicator ─────────────────────────────────────
+const NN_FRAMES = [
+  "[●○○] ──▶ [○○] ──▶ [○]",
+  "[○●○] ──▶ [○○] ──▶ [○]",
+  "[○○●] ──▶ [○○] ──▶ [○]",
+  "[○○○] ──▶ [●○] ──▶ [○]",
+  "[○○○] ──▶ [○●] ──▶ [○]",
+  "[○○○] ──▶ [○○] ──▶ [●]",
+];
+
+const ThinkingIndicator = () => {
+  const [frame, setFrame] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setFrame((f) => (f + 1) % NN_FRAMES.length), 180);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+      <span style={{ color: "var(--term-blue)", fontSize: "11px", flexShrink: 0 }}>ai</span>
+      <span style={{ color: "var(--term-dim)" }}>: </span>
+      <span
+        style={{
+          color: "var(--term-dim)",
+          fontSize: "11px",
+          fontFamily: "inherit",
+          letterSpacing: "0.5px",
+        }}
+      >
+        {NN_FRAMES[frame]}
+      </span>
+      <span style={{ color: "var(--term-green)", fontSize: "12px" }}>thinking</span>
+      <span className="cursor-blink" />
+    </div>
+  );
+};
+
+// ── ChatSection ────────────────────────────────────────────────────────────
 const ChatSection = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -32,6 +71,7 @@ const ChatSection = () => {
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isServerOnline, setIsServerOnline] = useState(true);
+  const [typingMessageId, setTypingMessageId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const isInitialLoad = useRef(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -76,6 +116,8 @@ const ChatSection = () => {
       toast.error("AI server is currently offline. Please try again later.");
       return;
     }
+    // Finish any ongoing typewriter immediately
+    setTypingMessageId(null);
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -91,8 +133,9 @@ const ChatSection = () => {
 
     try {
       const response = await sendMessage(messageText);
+      const aiId = (Date.now() + 1).toString();
       const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
+        id: aiId,
         text: response.success
           ? response.response
           : response.response || "Sorry, I'm having trouble connecting right now. Please try again later.",
@@ -101,6 +144,7 @@ const ChatSection = () => {
       };
       if (!response.success) toast.error("Failed to get response. Please try again.");
       setMessages((prev) => [...prev, aiMessage]);
+      setTypingMessageId(aiId);
     } catch (error) {
       console.error("Error getting AI response:", error);
       toast.error("Failed to get response. Please try again later.");
@@ -127,10 +171,10 @@ const ChatSection = () => {
   };
 
   return (
-    <section className="px-4 pb-6">
+    <section className="px-4 pb-6" style={{ position: "relative", zIndex: 1 }}>
       <div className="max-w-4xl mx-auto">
         <div style={{ border: "1px solid var(--term-border)", backgroundColor: "var(--term-bg)" }}>
-          {/* Terminal title bar */}
+          {/* Terminal title bar — enhanced AI style */}
           <div
             style={{
               borderBottom: "1px solid var(--term-border)",
@@ -139,12 +183,25 @@ const ChatSection = () => {
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: "6px",
             }}
           >
             <span style={{ color: "var(--term-dim)", fontSize: "12px" }}>
-              bash — ~/chat
+              🧠{" "}
+              <span style={{ color: "var(--term-text)" }}>AI Assistant v2.0</span>
+              <span style={{ color: "var(--term-dim)" }}>
+                {" "}| model:{" "}
+              </span>
+              <span style={{ color: "var(--term-cyan)" }}>rag-powered</span>
+              <span style={{ color: "var(--term-dim)" }}>
+                {" "}| status:{" "}
+              </span>
+              <span style={{ color: isServerOnline ? "var(--term-green)" : "var(--term-red)" }}>
+                {isServerOnline ? "online" : "offline"}
+              </span>
             </span>
-            {/* Server status */}
+            {/* Server status dot */}
             <span
               style={{
                 fontSize: "11px",
@@ -161,6 +218,7 @@ const ChatSection = () => {
                   borderRadius: "50%",
                   backgroundColor: isServerOnline ? "var(--term-green)" : "var(--term-red)",
                   display: "inline-block",
+                  animation: isServerOnline ? "neuralPulse 2s ease-in-out infinite" : "none",
                 }}
               />
               {isServerOnline ? "server:online" : "server:offline"}
@@ -212,18 +270,14 @@ const ChatSection = () => {
             }}
           >
             {messages.map((message) => (
-              <MessageBubble key={message.id} message={message} />
+              <MessageBubble
+                key={message.id}
+                message={message}
+                isTyping={typingMessageId === message.id}
+                onTypingComplete={() => setTypingMessageId(null)}
+              />
             ))}
-            {isLoading && (
-              <div style={{ display: "flex", alignItems: "center", gap: "6px", color: "var(--term-dim)" }}>
-                <span style={{ color: "var(--term-blue)" }}>ai</span>
-                <span style={{ color: "var(--term-dim)" }}>: </span>
-                <span style={{ color: "var(--term-green)" }}>
-                  thinking
-                  <span className="cursor-blink" />
-                </span>
-              </div>
-            )}
+            {isLoading && <ThinkingIndicator />}
             <div ref={messagesEndRef} />
           </div>
 
@@ -261,11 +315,13 @@ const ChatSection = () => {
                       if (!isLoading && isServerOnline) {
                         e.currentTarget.style.borderColor = "var(--term-green)";
                         e.currentTarget.style.color = "var(--term-green)";
+                        e.currentTarget.style.backgroundColor = "rgba(63,185,80,0.06)";
                       }
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.borderColor = "var(--term-border)";
                       e.currentTarget.style.color = "var(--term-dim)";
+                      e.currentTarget.style.backgroundColor = "transparent";
                     }}
                   >
                     [{index + 1}] {question}
@@ -311,10 +367,12 @@ const ChatSection = () => {
                 style={{
                   background: "transparent",
                   border: "none",
-                  color: inputValue.trim() && !isLoading && isServerOnline
-                    ? "var(--term-green)"
-                    : "var(--term-border)",
-                  cursor: inputValue.trim() && !isLoading && isServerOnline ? "pointer" : "default",
+                  color:
+                    inputValue.trim() && !isLoading && isServerOnline
+                      ? "var(--term-green)"
+                      : "var(--term-border)",
+                  cursor:
+                    inputValue.trim() && !isLoading && isServerOnline ? "pointer" : "default",
                   fontFamily: "inherit",
                   fontSize: "12px",
                   padding: "0 4px",
