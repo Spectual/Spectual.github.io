@@ -128,7 +128,7 @@ const AutoTypeCLI = () => {
         borderTop: "1px solid var(--term-border)",
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", alignItems: "flex-start", gap: "6px", flexWrap: "wrap", minHeight: "2.6em" }}>
         <span style={{ color: "var(--term-green)" }}>spectual</span>
         <span style={{ color: "var(--term-dim)" }}>@</span>
         <span style={{ color: "var(--term-blue)" }}>github.io</span>
@@ -136,20 +136,20 @@ const AutoTypeCLI = () => {
         <span style={{ color: "var(--term-text)", marginLeft: "4px" }}>{text}</span>
         {phase !== "output" && <span className="cursor-blink" />}
       </div>
-      {phase === "output" && (
-        <div
-          style={{
-            color: "var(--term-dim)",
-            marginTop: "6px",
-            whiteSpace: "pre-line",
-            borderLeft: "2px solid var(--term-border)",
-            paddingLeft: "8px",
-            fontSize: "11px",
-          }}
-        >
-          {output}
-        </div>
-      )}
+      <div
+        style={{
+          color: "var(--term-dim)",
+          marginTop: "6px",
+          whiteSpace: "pre-line",
+          borderLeft: "2px solid var(--term-border)",
+          paddingLeft: "8px",
+          fontSize: "11px",
+          minHeight: "2.8em",
+          visibility: phase === "output" ? "visible" : "hidden",
+        }}
+      >
+        {output}
+      </div>
     </div>
   );
 };
