@@ -1,96 +1,152 @@
 import { personalInfo } from "@/data/personalInfo";
-import { Linkedin, Github, MapPin, Mail, ArrowUpRight } from "lucide-react";
 
 const ProfileSection = () => {
+  const skills = personalInfo.skills;
+
   return (
-    <section className="px-6 py-10 animate-fade-in-up">
+    <section className="px-4 py-6">
       <div className="max-w-4xl mx-auto">
-        <div className="bg-stone-900 rounded-2xl border border-stone-800 p-8">
-          <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8">
-            {/* Avatar */}
-            <div className="relative flex-shrink-0">
-              <div className="w-28 h-28 lg:w-36 lg:h-36 rounded-full border-2 border-stone-700 overflow-hidden">
-                <img
-                  src={personalInfo.avatar}
-                  alt={personalInfo.name}
-                  className="w-full h-full object-cover bg-stone-800"
-                  loading="eager"
-                />
-              </div>
-              {/* Availability indicator */}
-              <span
-                className="absolute bottom-1.5 right-1.5 w-3.5 h-3.5 bg-emerald-500 border-2 border-stone-900 rounded-full"
-                title="Open to opportunities"
-              />
+        {/* Terminal window */}
+        <div style={{ border: "1px solid var(--term-border)", backgroundColor: "var(--term-bg)" }}>
+          {/* Title bar */}
+          <div
+            style={{
+              borderBottom: "1px solid var(--term-border)",
+              backgroundColor: "var(--term-bg2)",
+              padding: "6px 16px",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+            }}
+          >
+            <span style={{ color: "var(--term-dim)", fontSize: "12px" }}>bash — neofetch</span>
+          </div>
+
+          {/* Content */}
+          <div style={{ padding: "24px", fontSize: "13px" }}>
+            {/* Command line */}
+            <div style={{ marginBottom: "16px", display: "flex", alignItems: "center", gap: "6px" }}>
+              <span style={{ color: "var(--term-green)" }}>spectual</span>
+              <span style={{ color: "var(--term-dim)" }}>@</span>
+              <span style={{ color: "var(--term-blue)" }}>github.io</span>
+              <span style={{ color: "var(--term-text)" }}>:~$</span>
+              <span style={{ color: "var(--term-text)", marginLeft: "4px" }}>neofetch</span>
             </div>
 
-            {/* Info */}
-            <div className="flex-1 text-center lg:text-left">
-              <h1 className="text-4xl lg:text-5xl font-bold text-stone-100 mb-1.5 tracking-tight">
-                {personalInfo.name}
-              </h1>
-              <p className="text-lg text-[#cf6b47] mb-4 font-medium">
-                {personalInfo.title}
-              </p>
-
-              {/* Contact Info */}
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mb-5 text-stone-400 text-sm">
-                <a
-                  href={`mailto:${personalInfo.email}`}
-                  className="flex items-center gap-1.5 hover:text-stone-200 transition-colors"
+            {/* neofetch layout */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "24px",
+              }}
+              className="lg:flex-row"
+            >
+              {/* Avatar column */}
+              <div style={{ flexShrink: 0 }}>
+                <div
+                  style={{
+                    border: "1px solid var(--term-border)",
+                    overflow: "hidden",
+                    width: "140px",
+                    height: "140px",
+                  }}
                 >
-                  <Mail size={14} />
-                  {personalInfo.email}
-                </a>
-                <div className="flex items-center gap-1.5">
-                  <MapPin size={14} />
-                  {personalInfo.location}
+                  <img
+                    src={personalInfo.avatar}
+                    alt={personalInfo.name}
+                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                    loading="eager"
+                  />
+                </div>
+                <div style={{ marginTop: "6px", fontSize: "11px", color: "var(--term-green)", textAlign: "center" }}>
+                  ● available
                 </div>
               </div>
 
-              {/* Bio */}
-              <p className="text-stone-400 leading-relaxed mb-6 max-w-2xl text-sm lg:text-base">
-                {personalInfo.background}
-              </p>
+              {/* Info column */}
+              <div style={{ flex: 1, fontFamily: "inherit" }}>
+                {/* Name */}
+                <div style={{ color: "var(--term-green)", fontWeight: 700, fontSize: "20px", marginBottom: "4px" }}>
+                  {personalInfo.name}
+                </div>
+                <div style={{ color: "var(--term-border)", marginBottom: "12px", fontSize: "12px" }}>
+                  {"─".repeat(36)}
+                </div>
 
-              {/* Skills */}
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 mb-6">
-                {personalInfo.skills.map((skill) => (
-                  <span
-                    key={skill}
-                    className="px-3 py-1 border border-stone-700 text-stone-400 rounded-full text-xs font-medium hover:border-stone-500 hover:text-stone-300 transition-all duration-150"
-                  >
-                    {skill}
-                  </span>
+                {/* Key-value info */}
+                {[
+                  { key: "role", value: personalInfo.title, color: "var(--term-blue)" },
+                  { key: "location", value: personalInfo.location, color: "var(--term-blue)" },
+                  {
+                    key: "email",
+                    value: personalInfo.email,
+                    color: "var(--term-blue)",
+                    href: `mailto:${personalInfo.email}`,
+                  },
+                  {
+                    key: "github",
+                    value: "github.com/spectual",
+                    color: "var(--term-blue)",
+                    href: personalInfo.social.github,
+                    external: true,
+                  },
+                  {
+                    key: "linkedin",
+                    value: "linkedin.com/in/yifei-bao-mscs",
+                    color: "var(--term-blue)",
+                    href: personalInfo.social.linkedin,
+                    external: true,
+                  },
+                ].map(({ key, value, color, href, external }) => (
+                  <div key={key} style={{ marginBottom: "4px", lineHeight: "1.6" }}>
+                    <span style={{ color }}>{key}</span>
+                    <span style={{ color: "var(--term-dim)" }}>: </span>
+                    {href ? (
+                      <a
+                        href={href}
+                        target={external ? "_blank" : undefined}
+                        rel={external ? "noopener noreferrer" : undefined}
+                        style={{ color: "var(--term-text)", textDecoration: "none" }}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = "var(--term-green)")}
+                        onMouseLeave={(e) => (e.currentTarget.style.color = "var(--term-text)")}
+                      >
+                        {value}
+                      </a>
+                    ) : (
+                      <span style={{ color: "var(--term-text)" }}>{value}</span>
+                    )}
+                  </div>
                 ))}
-              </div>
 
-              {/* Social Links */}
-              <div className="flex items-center justify-center lg:justify-start gap-5">
-                {personalInfo.social?.linkedin && (
-                  <a
-                    href={personalInfo.social.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 text-stone-400 hover:text-stone-200 transition-colors text-sm font-medium group"
-                  >
-                    <Linkedin size={15} />
-                    LinkedIn
-                    <ArrowUpRight size={13} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </a>
+                <div style={{ color: "var(--term-border)", margin: "12px 0", fontSize: "12px" }}>
+                  {"─".repeat(36)}
+                </div>
+
+                {/* Skills */}
+                <div style={{ marginBottom: "4px", lineHeight: "1.6" }}>
+                  <span style={{ color: "var(--term-blue)" }}>skills</span>
+                  <span style={{ color: "var(--term-dim)" }}>: </span>
+                  <span style={{ color: "var(--term-text)" }}>
+                    {skills.slice(0, 5).join(" | ")}
+                  </span>
+                </div>
+                {skills.length > 5 && (
+                  <div style={{ marginBottom: "4px", lineHeight: "1.6", paddingLeft: "54px" }}>
+                    <span style={{ color: "var(--term-text)" }}>
+                      {skills.slice(5).join(" | ")}
+                    </span>
+                  </div>
                 )}
-                {personalInfo.social?.github && (
-                  <a
-                    href={personalInfo.social.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 text-stone-400 hover:text-stone-200 transition-colors text-sm font-medium group"
-                  >
-                    <Github size={15} />
-                    GitHub
-                    <ArrowUpRight size={13} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </a>
-                )}
+
+                <div style={{ color: "var(--term-border)", margin: "12px 0", fontSize: "12px" }}>
+                  {"─".repeat(36)}
+                </div>
+
+                {/* Bio */}
+                <div style={{ color: "var(--term-dim)", fontSize: "12px", lineHeight: "1.7", maxWidth: "560px" }}>
+                  {personalInfo.background}
+                </div>
               </div>
             </div>
           </div>

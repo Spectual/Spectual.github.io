@@ -1,12 +1,9 @@
-import { Download, Globe } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link, useLocation } from "react-router-dom";
 
 const NAV_LINKS = [
-  { to: "/", label: "Chat" },
-  { to: "/resume", label: "Resume" },
-  { to: "/projects", label: "Projects" },
+  { to: "/", label: "~/chat" },
+  { to: "/resume", label: "~/resume" },
+  { to: "/projects", label: "~/projects" },
 ];
 
 const Resume = () => {
@@ -14,78 +11,168 @@ const Resume = () => {
 
   const resumeLinks = {
     googleDrive: "https://drive.google.com/file/d/1hlQVo5WIfv4bDgYR-6iq4l90mPY6Sqz1/view?usp=sharing",
-    directDownload: "https://drive.google.com/uc?export=download&id=1hlQVo5WIfv4bDgYR-6iq4l90mPY6Sqz1"
+    directDownload: "https://drive.google.com/uc?export=download&id=1hlQVo5WIfv4bDgYR-6iq4l90mPY6Sqz1",
+  };
+
+  const btnStyle: React.CSSProperties = {
+    border: "1px solid var(--term-border)",
+    backgroundColor: "transparent",
+    color: "var(--term-dim)",
+    fontFamily: "inherit",
+    fontSize: "12px",
+    padding: "6px 14px",
+    cursor: "pointer",
+    transition: "all 0.15s",
+    textDecoration: "none",
+    display: "inline-block",
   };
 
   return (
-    <div className="min-h-screen bg-stone-950">
-      <div className="relative z-10">
-        {/* Header Navigation */}
-        <header className="py-5 px-6 border-b border-stone-800/60">
-          <nav className="max-w-4xl mx-auto">
-            <div className="flex space-x-7">
-              {NAV_LINKS.map(({ to, label }) => (
+    <div className="min-h-screen" style={{ backgroundColor: "var(--term-bg)", color: "var(--term-text)" }}>
+      {/* Terminal title bar */}
+      <header style={{ borderBottom: "1px solid var(--term-border)", backgroundColor: "var(--term-bg2)" }}>
+        <div className="max-w-4xl mx-auto px-4 py-0 flex items-stretch gap-0">
+          <div className="flex gap-1.5 items-center px-4 shrink-0">
+            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "var(--term-red)" }} />
+            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "var(--term-yellow)" }} />
+            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "var(--term-green)" }} />
+          </div>
+          <nav className="flex items-stretch flex-1">
+            {NAV_LINKS.map(({ to, label }) => {
+              const isActive = location.pathname === to;
+              return (
                 <Link
                   key={to}
                   to={to}
-                  className={`text-sm font-medium transition-colors pb-1 ${
-                    location.pathname === to
-                      ? "text-[#cf6b47] border-b border-[#cf6b47]/70"
-                      : "text-stone-400 hover:text-stone-200"
-                  }`}
+                  style={{
+                    color: isActive ? "var(--term-text)" : "var(--term-dim)",
+                    backgroundColor: isActive ? "var(--term-bg)" : "transparent",
+                    padding: "8px 16px",
+                    fontSize: "12px",
+                    borderLeft: `1px solid ${isActive ? "var(--term-border)" : "transparent"}`,
+                    borderRight: `1px solid ${isActive ? "var(--term-border)" : "transparent"}`,
+                    borderTop: `2px solid ${isActive ? "var(--term-green)" : "transparent"}`,
+                    borderBottom: `1px solid ${isActive ? "var(--term-bg)" : "transparent"}`,
+                    display: "flex",
+                    alignItems: "center",
+                    textDecoration: "none",
+                    transition: "color 0.15s",
+                    marginBottom: isActive ? "-1px" : "0",
+                  }}
                 >
                   {label}
                 </Link>
-              ))}
-            </div>
+              );
+            })}
           </nav>
-        </header>
+          <div className="flex items-center px-4 shrink-0" style={{ fontSize: "11px", color: "var(--term-dim)" }}>
+            spectual@github.io
+          </div>
+        </div>
+      </header>
 
-        {/* Resume Content */}
-        <div className="px-6 py-8">
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-stone-900 rounded-2xl border border-stone-800 p-8">
-              <div className="mb-6">
-                <h1 className="text-3xl font-bold text-stone-100 mb-2 tracking-tight">Resume</h1>
-                <p className="text-stone-400 text-base">
-                  View my professional experience and skills
-                </p>
+      <div className="px-4 py-6">
+        <div className="max-w-4xl mx-auto">
+          <div style={{ border: "1px solid var(--term-border)", backgroundColor: "var(--term-bg)" }}>
+            {/* Title bar */}
+            <div
+              style={{
+                borderBottom: "1px solid var(--term-border)",
+                backgroundColor: "var(--term-bg2)",
+                padding: "6px 16px",
+                fontSize: "12px",
+                color: "var(--term-dim)",
+              }}
+            >
+              bash — ~/resume
+            </div>
+
+            <div style={{ padding: "20px 24px" }}>
+              {/* Command header */}
+              <div style={{ marginBottom: "16px", fontSize: "13px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "8px" }}>
+                  <span style={{ color: "var(--term-green)" }}>spectual</span>
+                  <span style={{ color: "var(--term-dim)" }}>@</span>
+                  <span style={{ color: "var(--term-blue)" }}>github.io</span>
+                  <span style={{ color: "var(--term-text)" }}>:~$</span>
+                  <span style={{ color: "var(--term-text)", marginLeft: "4px" }}>
+                    cat Yifei_Bao_BU_MSCS.pdf
+                  </span>
+                </div>
+                <div style={{ color: "var(--term-dim)", fontSize: "11px" }}>
+                  # rendering PDF preview... use buttons below to open or download
+                </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-wrap gap-3 mb-6">
-                <Button
-                  onClick={() => window.open(resumeLinks.googleDrive, '_blank')}
-                  className="bg-stone-800 hover:bg-stone-700 text-stone-300 border border-stone-700 hover:border-stone-600 transition-all duration-150"
+              {/* Action buttons */}
+              <div style={{ display: "flex", gap: "8px", marginBottom: "16px", flexWrap: "wrap" }}>
+                <a
+                  href={resumeLinks.googleDrive}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={btnStyle}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = "var(--term-blue)";
+                    e.currentTarget.style.color = "var(--term-blue)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "var(--term-border)";
+                    e.currentTarget.style.color = "var(--term-dim)";
+                  }}
                 >
-                  <Globe className="w-4 h-4 mr-2" />
-                  Open in Google Drive
-                </Button>
-                <Button
-                  onClick={() => window.open(resumeLinks.directDownload, '_blank')}
-                  className="bg-[#cf6b47]/20 hover:bg-[#cf6b47]/30 text-[#cf6b47] border border-[#cf6b47]/30 hover:border-[#cf6b47]/50 transition-all duration-150"
+                  [open-in-drive]
+                </a>
+                <a
+                  href={resumeLinks.directDownload}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ ...btnStyle, color: "var(--term-green)", borderColor: "var(--term-green)" }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "var(--term-green)";
+                    e.currentTarget.style.color = "var(--term-bg)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "transparent";
+                    e.currentTarget.style.color = "var(--term-green)";
+                  }}
                 >
-                  <Download className="w-4 h-4 mr-2" />
-                  Download PDF
-                </Button>
+                  [download-pdf]
+                </a>
               </div>
 
-              {/* Resume Display */}
-              <Card className="bg-stone-800/50 border-stone-700/60">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-stone-300 text-sm font-medium">Yifei_Bao_BU_MSCS</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="w-full h-[800px] rounded-lg overflow-hidden border border-stone-700/60">
-                    <iframe
-                      src="https://drive.google.com/file/d/1hlQVo5WIfv4bDgYR-6iq4l90mPY6Sqz1/preview"
-                      className="w-full h-full"
-                      title="Resume PDF"
-                      allowFullScreen
-                    />
-                  </div>
-                </CardContent>
-              </Card>
+              {/* File info */}
+              <div
+                style={{
+                  border: "1px solid var(--term-border)",
+                  backgroundColor: "var(--term-bg2)",
+                  padding: "8px 12px",
+                  marginBottom: "12px",
+                  fontSize: "11px",
+                  color: "var(--term-dim)",
+                  display: "flex",
+                  gap: "16px",
+                }}
+              >
+                <span><span style={{ color: "var(--term-blue)" }}>file</span>: Yifei_Bao_BU_MSCS.pdf</span>
+                <span><span style={{ color: "var(--term-blue)" }}>type</span>: application/pdf</span>
+                <span><span style={{ color: "var(--term-blue)" }}>source</span>: google-drive</span>
+              </div>
+
+              {/* PDF embed */}
+              <div
+                style={{
+                  border: "1px solid var(--term-border)",
+                  overflow: "hidden",
+                  height: "800px",
+                }}
+              >
+                <iframe
+                  src="https://drive.google.com/file/d/1hlQVo5WIfv4bDgYR-6iq4l90mPY6Sqz1/preview"
+                  style={{ width: "100%", height: "100%", border: "none", display: "block" }}
+                  title="Resume PDF"
+                  allowFullScreen
+                />
+              </div>
             </div>
           </div>
         </div>

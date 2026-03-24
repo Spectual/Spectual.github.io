@@ -1,80 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Claude-inspired warm dark design system */
+/* Terminal design system */
 
 @layer base {
   :root {
-    /* Warm dark palette — always dark, like Claude's interface */
-    --background: 30 8% 8%;
-    --foreground: 40 15% 92%;
+    /* Terminal dark palette */
+    --background: 215 28% 7%;
+    --foreground: 210 18% 83%;
 
-    --card: 30 8% 11%;
-    --card-foreground: 40 15% 92%;
+    --card: 215 25% 10%;
+    --card-foreground: 210 18% 83%;
 
-    --popover: 30 8% 11%;
-    --popover-foreground: 40 15% 92%;
+    --popover: 215 25% 10%;
+    --popover-foreground: 210 18% 83%;
 
-    --primary: 17 57% 55%;
-    --primary-foreground: 40 15% 96%;
+    --primary: 128 48% 55%;
+    --primary-foreground: 215 28% 7%;
 
-    --secondary: 30 6% 16%;
-    --secondary-foreground: 40 10% 75%;
+    --secondary: 210 16% 13%;
+    --secondary-foreground: 210 8% 55%;
 
-    --muted: 30 6% 16%;
-    --muted-foreground: 30 5% 55%;
+    --muted: 210 16% 13%;
+    --muted-foreground: 210 8% 47%;
 
-    --accent: 30 6% 18%;
-    --accent-foreground: 40 15% 92%;
+    --accent: 215 25% 14%;
+    --accent-foreground: 210 18% 83%;
 
-    --destructive: 0 62% 40%;
-    --destructive-foreground: 40 15% 96%;
+    --destructive: 2 92% 64%;
+    --destructive-foreground: 215 28% 7%;
 
-    --border: 30 6% 20%;
-    --input: 30 6% 16%;
-    --ring: 17 57% 55%;
+    --border: 210 13% 20%;
+    --input: 210 13% 16%;
+    --ring: 128 48% 55%;
 
-    --radius: 0.75rem;
+    --radius: 0rem;
 
-    --sidebar-background: 30 8% 8%;
-    --sidebar-foreground: 40 15% 92%;
-    --sidebar-primary: 17 57% 55%;
-    --sidebar-primary-foreground: 40 15% 96%;
-    --sidebar-accent: 30 6% 16%;
-    --sidebar-accent-foreground: 40 15% 92%;
-    --sidebar-border: 30 6% 20%;
-    --sidebar-ring: 17 57% 55%;
+    /* Terminal color tokens */
+    --term-bg: #0d1117;
+    --term-bg2: #161b22;
+    --term-text: #c9d1d9;
+    --term-dim: #6e7681;
+    --term-border: #30363d;
+    --term-green: #3fb950;
+    --term-yellow: #d29922;
+    --term-blue: #58a6ff;
+    --term-red: #f85149;
+    --term-purple: #bc8cff;
+    --term-cyan: #39c5cf;
+
+    --sidebar-background: 215 28% 7%;
+    --sidebar-foreground: 210 18% 83%;
+    --sidebar-primary: 128 48% 55%;
+    --sidebar-primary-foreground: 215 28% 7%;
+    --sidebar-accent: 210 16% 13%;
+    --sidebar-accent-foreground: 210 18% 83%;
+    --sidebar-border: 210 13% 20%;
+    --sidebar-ring: 128 48% 55%;
   }
 
   .dark {
-    --background: 30 8% 8%;
-    --foreground: 40 15% 92%;
-    --card: 30 8% 11%;
-    --card-foreground: 40 15% 92%;
-    --popover: 30 8% 11%;
-    --popover-foreground: 40 15% 92%;
-    --primary: 17 57% 55%;
-    --primary-foreground: 40 15% 96%;
-    --secondary: 30 6% 16%;
-    --secondary-foreground: 40 10% 75%;
-    --muted: 30 6% 16%;
-    --muted-foreground: 30 5% 55%;
-    --accent: 30 6% 18%;
-    --accent-foreground: 40 15% 92%;
-    --destructive: 0 62% 40%;
-    --destructive-foreground: 40 15% 96%;
-    --border: 30 6% 20%;
-    --input: 30 6% 16%;
-    --ring: 17 57% 55%;
-    --sidebar-background: 30 8% 8%;
-    --sidebar-foreground: 40 15% 92%;
-    --sidebar-primary: 17 57% 55%;
-    --sidebar-primary-foreground: 40 15% 96%;
-    --sidebar-accent: 30 6% 16%;
-    --sidebar-accent-foreground: 40 15% 92%;
-    --sidebar-border: 30 6% 20%;
-    --sidebar-ring: 17 57% 55%;
+    --background: 215 28% 7%;
+    --foreground: 210 18% 83%;
+    --card: 215 25% 10%;
+    --card-foreground: 210 18% 83%;
+    --popover: 215 25% 10%;
+    --popover-foreground: 210 18% 83%;
+    --primary: 128 48% 55%;
+    --primary-foreground: 215 28% 7%;
+    --secondary: 210 16% 13%;
+    --secondary-foreground: 210 8% 55%;
+    --muted: 210 16% 13%;
+    --muted-foreground: 210 8% 47%;
+    --accent: 215 25% 14%;
+    --accent-foreground: 210 18% 83%;
+    --destructive: 2 92% 64%;
+    --destructive-foreground: 215 28% 7%;
+    --border: 210 13% 20%;
+    --input: 210 13% 16%;
+    --ring: 128 48% 55%;
+    --sidebar-background: 215 28% 7%;
+    --sidebar-foreground: 210 18% 83%;
+    --sidebar-primary: 128 48% 55%;
+    --sidebar-primary-foreground: 215 28% 7%;
+    --sidebar-accent: 210 16% 13%;
+    --sidebar-accent-foreground: 210 18% 83%;
+    --sidebar-border: 210 13% 20%;
+    --sidebar-ring: 128 48% 55%;
   }
 }
 
@@ -85,15 +100,34 @@
 
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', ui-monospace, monospace;
+    font-feature-settings: "liga" 1, "calt" 1;
+    background-color: var(--term-bg);
+    color: var(--term-text);
   }
 }
 
-/* Fade-in slide-up animation for sections */
+/* Cursor blink animation */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.cursor-blink {
+  display: inline-block;
+  width: 8px;
+  height: 1.1em;
+  background-color: var(--term-green);
+  vertical-align: text-bottom;
+  animation: blink 1.2s step-start infinite;
+  margin-left: 2px;
+}
+
+/* Fade in animation */
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -102,19 +136,30 @@
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 0.5s ease-out both;
+  animation: fadeInUp 0.4s ease-out both;
 }
 
 .animate-fade-in-up-delay-1 {
-  animation: fadeInUp 0.5s ease-out 0.12s both;
+  animation: fadeInUp 0.4s ease-out 0.1s both;
 }
 
 .animate-fade-in-up-delay-2 {
-  animation: fadeInUp 0.5s ease-out 0.24s both;
+  animation: fadeInUp 0.4s ease-out 0.2s both;
 }
 
-/* Accessible focus ring — warm terracotta */
-.focus-warm:focus-visible {
-  outline: 2px solid #cf6b47;
-  outline-offset: 2px;
+/* Terminal scrollbar */
+.terminal-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.terminal-scroll::-webkit-scrollbar-track {
+  background: var(--term-bg);
+}
+
+.terminal-scroll::-webkit-scrollbar-thumb {
+  background: var(--term-border);
+}
+
+.terminal-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--term-dim);
 }
