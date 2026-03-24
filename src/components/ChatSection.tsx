@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Send, Bot, AlertCircle, Wifi, WifiOff } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import MessageBubble from "./MessageBubble";
 import { sendMessage, checkHealth } from "@/utils/api";
 import { toast } from "sonner";
@@ -37,6 +35,7 @@ const ChatSection = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const isInitialLoad = useRef(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const isNearBottom = (): boolean => {
     const el = scrollContainerRef.current;
@@ -116,6 +115,7 @@ const ChatSection = () => {
       ]);
     } finally {
       setIsLoading(false);
+      inputRef.current?.focus();
     }
   };
 
@@ -127,96 +127,203 @@ const ChatSection = () => {
   };
 
   return (
-    <section className="px-6 pb-8">
+    <section className="px-4 pb-6">
       <div className="max-w-4xl mx-auto">
-        <div className="bg-stone-900 rounded-2xl border border-stone-800 overflow-hidden">
-          {/* Header */}
-          <div className="bg-stone-900 p-5 border-b border-stone-800">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 bg-stone-800 border border-stone-700 rounded-xl flex items-center justify-center shrink-0">
-                <Bot className="text-[#cf6b47]" size={18} />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h2 className="text-base font-semibold text-stone-100">Ask Anything About Me</h2>
-                <p className="text-stone-500 text-xs">Powered by RAG · instant answers about background & projects</p>
-              </div>
-              {/* Server status pill */}
-              <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${
-                isServerOnline
-                  ? "bg-emerald-950/60 border-emerald-800/50 text-emerald-400"
-                  : "bg-red-950/60 border-red-800/50 text-red-400"
-              }`}>
-                {isServerOnline ? <Wifi size={11} /> : <WifiOff size={11} />}
-                {isServerOnline ? "Online" : "Offline"}
-              </div>
-            </div>
-
-            {!isServerOnline && (
-              <div className="mt-3 bg-red-950/40 rounded-xl p-3 border border-red-900/50 flex items-center gap-2.5">
-                <AlertCircle className="text-red-400 shrink-0" size={15} />
-                <p className="text-sm text-red-400">AI server is offline. Responses may be unavailable.</p>
-              </div>
-            )}
+        <div style={{ border: "1px solid var(--term-border)", backgroundColor: "var(--term-bg)" }}>
+          {/* Terminal title bar */}
+          <div
+            style={{
+              borderBottom: "1px solid var(--term-border)",
+              backgroundColor: "var(--term-bg2)",
+              padding: "6px 16px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <span style={{ color: "var(--term-dim)", fontSize: "12px" }}>
+              bash — ~/chat
+            </span>
+            {/* Server status */}
+            <span
+              style={{
+                fontSize: "11px",
+                color: isServerOnline ? "var(--term-green)" : "var(--term-red)",
+                display: "flex",
+                alignItems: "center",
+                gap: "4px",
+              }}
+            >
+              <span
+                style={{
+                  width: "6px",
+                  height: "6px",
+                  borderRadius: "50%",
+                  backgroundColor: isServerOnline ? "var(--term-green)" : "var(--term-red)",
+                  display: "inline-block",
+                }}
+              />
+              {isServerOnline ? "server:online" : "server:offline"}
+            </span>
           </div>
 
-          {/* Messages */}
+          {/* Header command */}
+          <div style={{ padding: "12px 16px 0", fontSize: "12px", borderBottom: "1px solid var(--term-border)" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px", paddingBottom: "10px" }}>
+              <span style={{ color: "var(--term-green)" }}>spectual</span>
+              <span style={{ color: "var(--term-dim)" }}>@</span>
+              <span style={{ color: "var(--term-blue)" }}>github.io</span>
+              <span style={{ color: "var(--term-text)" }}>:~$</span>
+              <span style={{ color: "var(--term-text)", marginLeft: "4px" }}>
+                chat --model rag-powered
+              </span>
+            </div>
+          </div>
+
+          {!isServerOnline && (
+            <div
+              style={{
+                margin: "8px 16px",
+                padding: "8px 12px",
+                border: "1px solid var(--term-red)",
+                backgroundColor: "rgba(248, 81, 73, 0.08)",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                fontSize: "12px",
+                color: "var(--term-red)",
+              }}
+            >
+              <AlertCircle size={13} />
+              error: AI server is offline. Responses unavailable.
+            </div>
+          )}
+
+          {/* Messages area */}
           <div
             ref={scrollContainerRef}
-            className="h-96 overflow-y-auto p-5 space-y-4 scrollbar-thin scrollbar-thumb-stone-700 scrollbar-track-transparent"
+            className="terminal-scroll"
+            style={{
+              height: "384px",
+              overflowY: "auto",
+              padding: "16px",
+              fontFamily: "inherit",
+              fontSize: "13px",
+            }}
           >
             {messages.map((message) => (
               <MessageBubble key={message.id} message={message} />
             ))}
             {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-stone-800 rounded-2xl px-4 py-3 border border-stone-700/60">
-                  <div className="flex space-x-1.5 items-center">
-                    <div className="w-1.5 h-1.5 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                    <div className="w-1.5 h-1.5 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                    <div className="w-1.5 h-1.5 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                  </div>
-                </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "6px", color: "var(--term-dim)" }}>
+                <span style={{ color: "var(--term-blue)" }}>ai</span>
+                <span style={{ color: "var(--term-dim)" }}>: </span>
+                <span style={{ color: "var(--term-green)" }}>
+                  thinking
+                  <span className="cursor-blink" />
+                </span>
               </div>
             )}
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input + Chips */}
-          <div className="p-5 bg-stone-950/50 border-t border-stone-800 space-y-3">
-            {/* Input row */}
-            <div className="flex gap-2">
-              <Input
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={handleKeyPress}
-                placeholder="Ask me anything about my background..."
-                className="bg-stone-800 border-stone-700 text-stone-100 placeholder:text-stone-500 rounded-xl focus-visible:ring-[#cf6b47]/40 focus-visible:border-stone-600"
-                disabled={isLoading || !isServerOnline}
-              />
-              <Button
-                onClick={() => handleSendMessage(inputValue)}
-                disabled={isLoading || !inputValue.trim() || !isServerOnline}
-                className="rounded-xl px-3.5 bg-[#cf6b47]/20 hover:bg-[#cf6b47]/30 text-[#cf6b47] border border-[#cf6b47]/30 hover:border-[#cf6b47]/50 transition-all duration-150 disabled:opacity-40"
-              >
-                <Send size={15} />
-              </Button>
-            </div>
-
-            {/* Predefined question chips */}
-            <div>
-              <p className="text-xs text-stone-600 mb-2 font-medium uppercase tracking-wider">Try asking</p>
-              <div className="flex flex-wrap gap-1.5">
+          {/* Input area */}
+          <div
+            style={{
+              borderTop: "1px solid var(--term-border)",
+              padding: "12px 16px",
+              backgroundColor: "var(--term-bg)",
+            }}
+          >
+            {/* Predefined questions */}
+            <div style={{ marginBottom: "10px" }}>
+              <div style={{ fontSize: "11px", color: "var(--term-dim)", marginBottom: "6px" }}>
+                # quick commands:
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
                 {PREDEFINED_QUESTIONS.map((question, index) => (
                   <button
                     key={index}
                     onClick={() => handleSendMessage(question)}
                     disabled={isLoading || !isServerOnline}
-                    className="px-3 py-1.5 text-xs border border-stone-700 text-stone-400 hover:border-stone-600 hover:text-stone-300 rounded-full transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed"
+                    style={{
+                      padding: "2px 8px",
+                      border: "1px solid var(--term-border)",
+                      backgroundColor: "transparent",
+                      color: "var(--term-dim)",
+                      fontSize: "11px",
+                      cursor: "pointer",
+                      fontFamily: "inherit",
+                      transition: "all 0.15s",
+                      opacity: isLoading || !isServerOnline ? 0.4 : 1,
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isLoading && isServerOnline) {
+                        e.currentTarget.style.borderColor = "var(--term-green)";
+                        e.currentTarget.style.color = "var(--term-green)";
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = "var(--term-border)";
+                      e.currentTarget.style.color = "var(--term-dim)";
+                    }}
                   >
-                    {question}
+                    [{index + 1}] {question}
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* Command prompt input */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+                border: "1px solid var(--term-border)",
+                padding: "8px 12px",
+                backgroundColor: "var(--term-bg2)",
+              }}
+              onClick={() => inputRef.current?.focus()}
+            >
+              <span style={{ color: "var(--term-green)", fontSize: "13px", flexShrink: 0 }}>❯</span>
+              <input
+                ref={inputRef}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyPress}
+                placeholder="type your question..."
+                disabled={isLoading || !isServerOnline}
+                style={{
+                  flex: 1,
+                  background: "transparent",
+                  border: "none",
+                  outline: "none",
+                  color: "var(--term-text)",
+                  fontFamily: "inherit",
+                  fontSize: "13px",
+                  caretColor: "var(--term-green)",
+                }}
+              />
+              <button
+                onClick={() => handleSendMessage(inputValue)}
+                disabled={isLoading || !inputValue.trim() || !isServerOnline}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  color: inputValue.trim() && !isLoading && isServerOnline
+                    ? "var(--term-green)"
+                    : "var(--term-border)",
+                  cursor: inputValue.trim() && !isLoading && isServerOnline ? "pointer" : "default",
+                  fontFamily: "inherit",
+                  fontSize: "12px",
+                  padding: "0 4px",
+                  transition: "color 0.15s",
+                  flexShrink: 0,
+                }}
+              >
+                [enter]
+              </button>
             </div>
           </div>
         </div>

@@ -1,8 +1,4 @@
-import { Mail, Phone, MapPin, ExternalLink } from "lucide-react";
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 
 const GetInTouchSection = () => {
@@ -11,19 +7,19 @@ const GetInTouchSection = () => {
 
   const validate = () => {
     if (!form.name.trim()) {
-      toast({ title: "Name is required" });
+      toast({ title: "error: name is required" });
       return false;
     }
     if (!form.email.trim()) {
-      toast({ title: "Email is required" });
+      toast({ title: "error: email is required" });
       return false;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      toast({ title: "Please enter a valid email" });
+      toast({ title: "error: invalid email format" });
       return false;
     }
     if (!form.message.trim()) {
-      toast({ title: "Message is required" });
+      toast({ title: "error: message is required" });
       return false;
     }
     return true;
@@ -51,123 +47,202 @@ const GetInTouchSection = () => {
     setSubmitting(false);
   };
 
-  return (
-    <section className="px-6 pt-2 pb-12">
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-stone-900 rounded-2xl border border-stone-800 p-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            {/* Form side */}
-            <div>
-              <h2 className="text-2xl font-bold text-stone-100 mb-1.5 tracking-tight">
-                Get in Touch
-              </h2>
-              <p className="text-stone-500 text-sm mb-6 flex items-center gap-1.5">
-                <ExternalLink size={12} className="shrink-0" />
-                Clicking "Send" will open your default email client with the form pre-filled.
-              </p>
+  const inputStyle: React.CSSProperties = {
+    width: "100%",
+    background: "var(--term-bg2)",
+    border: "1px solid var(--term-border)",
+    color: "var(--term-text)",
+    fontFamily: "inherit",
+    fontSize: "13px",
+    padding: "6px 10px",
+    outline: "none",
+    caretColor: "var(--term-green)",
+    boxSizing: "border-box",
+  };
 
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+  const labelStyle: React.CSSProperties = {
+    color: "var(--term-blue)",
+    fontSize: "12px",
+    display: "block",
+    marginBottom: "4px",
+  };
+
+  return (
+    <section className="px-4 pb-10">
+      <div className="max-w-4xl mx-auto">
+        <div style={{ border: "1px solid var(--term-border)", backgroundColor: "var(--term-bg)" }}>
+          {/* Title bar */}
+          <div
+            style={{
+              borderBottom: "1px solid var(--term-border)",
+              backgroundColor: "var(--term-bg2)",
+              padding: "6px 16px",
+              fontSize: "12px",
+              color: "var(--term-dim)",
+            }}
+          >
+            bash — ~/contact
+          </div>
+
+          <div style={{ padding: "20px 24px" }}>
+            {/* Command header */}
+            <div style={{ marginBottom: "20px", fontSize: "13px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                <span style={{ color: "var(--term-green)" }}>spectual</span>
+                <span style={{ color: "var(--term-dim)" }}>@</span>
+                <span style={{ color: "var(--term-blue)" }}>github.io</span>
+                <span style={{ color: "var(--term-text)" }}>:~$</span>
+                <span style={{ color: "var(--term-text)", marginLeft: "4px" }}>
+                  contact --send-message
+                </span>
+              </div>
+              <div style={{ color: "var(--term-dim)", fontSize: "11px", marginTop: "6px", marginLeft: "0" }}>
+                # opens default email client with form pre-filled
+              </div>
+            </div>
+
+            {/* Two column layout */}
+            <div
+              style={{ display: "grid", gap: "32px" }}
+              className="lg:grid-cols-2"
+            >
+              {/* Form */}
+              <form onSubmit={handleSubmit}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "12px" }}>
                   <div>
-                    <label className="block text-stone-400 text-sm mb-1.5 font-medium">
-                      Name <span className="text-red-500">*</span>
+                    <label style={labelStyle}>
+                      name <span style={{ color: "var(--term-red)" }}>*</span>
                     </label>
-                    <Input
-                      placeholder="Your name"
+                    <input
+                      placeholder="your name"
                       value={form.name}
                       onChange={(e) => setForm({ ...form, name: e.target.value })}
-                      className="bg-stone-800 border-stone-700 text-stone-100 placeholder:text-stone-600 focus-visible:ring-[#cf6b47]/40 focus-visible:border-stone-600"
+                      style={inputStyle}
+                      onFocus={(e) => (e.currentTarget.style.borderColor = "var(--term-green)")}
+                      onBlur={(e) => (e.currentTarget.style.borderColor = "var(--term-border)")}
                     />
                   </div>
                   <div>
-                    <label className="block text-stone-400 text-sm mb-1.5 font-medium">Company</label>
-                    <Input
-                      placeholder="Company (optional)"
+                    <label style={labelStyle}>
+                      company{" "}
+                      <span style={{ color: "var(--term-dim)", fontSize: "10px" }}>(optional)</span>
+                    </label>
+                    <input
+                      placeholder="company name"
                       value={form.company}
                       onChange={(e) => setForm({ ...form, company: e.target.value })}
-                      className="bg-stone-800 border-stone-700 text-stone-100 placeholder:text-stone-600 focus-visible:ring-[#cf6b47]/40 focus-visible:border-stone-600"
+                      style={inputStyle}
+                      onFocus={(e) => (e.currentTarget.style.borderColor = "var(--term-green)")}
+                      onBlur={(e) => (e.currentTarget.style.borderColor = "var(--term-border)")}
                     />
                   </div>
                 </div>
-                <div>
-                  <label className="block text-stone-400 text-sm mb-1.5 font-medium">
-                    Email <span className="text-red-500">*</span>
+
+                <div style={{ marginBottom: "12px" }}>
+                  <label style={labelStyle}>
+                    email <span style={{ color: "var(--term-red)" }}>*</span>
                   </label>
-                  <Input
+                  <input
                     type="email"
                     placeholder="you@example.com"
                     value={form.email}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
-                    className="bg-stone-800 border-stone-700 text-stone-100 placeholder:text-stone-600 focus-visible:ring-[#cf6b47]/40 focus-visible:border-stone-600"
+                    style={inputStyle}
+                    onFocus={(e) => (e.currentTarget.style.borderColor = "var(--term-green)")}
+                    onBlur={(e) => (e.currentTarget.style.borderColor = "var(--term-border)")}
                   />
                 </div>
-                <div>
-                  <label className="block text-stone-400 text-sm mb-1.5 font-medium">
-                    Message <span className="text-red-500">*</span>
+
+                <div style={{ marginBottom: "16px" }}>
+                  <label style={labelStyle}>
+                    message <span style={{ color: "var(--term-red)" }}>*</span>
                   </label>
-                  <Textarea
-                    placeholder="Tell me about your needs and how I can help..."
+                  <textarea
+                    placeholder="your message..."
                     rows={5}
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
-                    className="bg-stone-800 border-stone-700 text-stone-100 placeholder:text-stone-600 focus-visible:ring-[#cf6b47]/40 focus-visible:border-stone-600 resize-none"
+                    style={{ ...inputStyle, resize: "none" }}
+                    onFocus={(e) => (e.currentTarget.style.borderColor = "var(--term-green)")}
+                    onBlur={(e) => (e.currentTarget.style.borderColor = "var(--term-border)")}
                   />
                 </div>
-                <Button
+
+                <button
                   type="submit"
                   disabled={submitting}
-                  className="bg-[#cf6b47]/20 hover:bg-[#cf6b47]/30 text-[#cf6b47] border border-[#cf6b47]/30 hover:border-[#cf6b47]/50 rounded-xl px-5 transition-all duration-150"
+                  style={{
+                    border: "1px solid var(--term-green)",
+                    backgroundColor: "transparent",
+                    color: "var(--term-green)",
+                    fontFamily: "inherit",
+                    fontSize: "13px",
+                    padding: "6px 16px",
+                    cursor: submitting ? "not-allowed" : "pointer",
+                    opacity: submitting ? 0.6 : 1,
+                    transition: "all 0.15s",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!submitting) {
+                      e.currentTarget.style.backgroundColor = "var(--term-green)";
+                      e.currentTarget.style.color = "var(--term-bg)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "transparent";
+                    e.currentTarget.style.color = "var(--term-green)";
+                  }}
                 >
-                  {submitting ? "Opening email client…" : "Send Message"}
-                </Button>
+                  {submitting ? "opening email client..." : "[send-message]"}
+                </button>
               </form>
-            </div>
 
-            {/* Contact info side */}
-            <div className="space-y-6">
+              {/* Contact info */}
               <div>
-                <h3 className="text-xl font-semibold text-stone-100 mb-2">Let's Start a Conversation</h3>
-                <p className="text-stone-500 text-sm">
-                  Happy to connect about opportunities, collaboration, or any interesting ideas.
-                </p>
-              </div>
-              <div className="space-y-2.5">
-                {[
-                  {
-                    icon: <Mail size={16} className="text-stone-400" />,
-                    label: "Email",
-                    content: (
-                      <a href="mailto:baoyifei@bu.edu" className="text-stone-300 hover:text-stone-100 transition-colors text-sm">
-                        baoyifei@bu.edu
-                      </a>
-                    ),
-                  },
-                  {
-                    icon: <Phone size={16} className="text-stone-400" />,
-                    label: "Phone",
-                    content: (
-                      <a href="tel:+18573403064" className="text-stone-300 hover:text-stone-100 transition-colors text-sm">
-                        +1 857 340 3064
-                      </a>
-                    ),
-                  },
-                  {
-                    icon: <MapPin size={16} className="text-stone-400" />,
-                    label: "Location",
-                    content: <span className="text-stone-300 text-sm">Boston, MA</span>,
-                  },
-                ].map(({ icon, label, content }) => (
-                  <div
-                    key={label}
-                    className="flex items-center gap-3.5 p-3.5 rounded-xl bg-stone-800/60 border border-stone-700/60 hover:border-stone-700 transition-all duration-150"
-                  >
-                    <div className="shrink-0">{icon}</div>
-                    <div>
-                      <div className="text-stone-600 text-xs mb-0.5">{label}</div>
-                      {content}
-                    </div>
+                <div style={{ marginBottom: "16px" }}>
+                  <div style={{ color: "var(--term-green)", fontWeight: 600, marginBottom: "4px", fontSize: "14px" }}>
+                    let's connect
                   </div>
-                ))}
+                  <div style={{ color: "var(--term-dim)", fontSize: "12px", lineHeight: "1.6" }}>
+                    Happy to connect about opportunities, collaboration, or any interesting ideas.
+                  </div>
+                </div>
+
+                <div style={{ fontSize: "12px" }}>
+                  {[
+                    { key: "email", value: "baoyifei@bu.edu", href: "mailto:baoyifei@bu.edu" },
+                    { key: "phone", value: "+1 857 340 3064", href: "tel:+18573403064" },
+                    { key: "location", value: "Boston, MA", href: null },
+                  ].map(({ key, value, href }) => (
+                    <div
+                      key={key}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "6px",
+                        padding: "8px 10px",
+                        border: "1px solid var(--term-border)",
+                        marginBottom: "6px",
+                        backgroundColor: "var(--term-bg2)",
+                      }}
+                    >
+                      <span style={{ color: "var(--term-blue)" }}>{key}</span>
+                      <span style={{ color: "var(--term-dim)" }}>:</span>
+                      {href ? (
+                        <a
+                          href={href}
+                          style={{ color: "var(--term-text)", textDecoration: "none" }}
+                          onMouseEnter={(e) => (e.currentTarget.style.color = "var(--term-green)")}
+                          onMouseLeave={(e) => (e.currentTarget.style.color = "var(--term-text)")}
+                        >
+                          {value}
+                        </a>
+                      ) : (
+                        <span style={{ color: "var(--term-text)" }}>{value}</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

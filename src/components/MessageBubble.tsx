@@ -12,21 +12,82 @@ interface MessageBubbleProps {
 }
 
 const MessageBubble = ({ message }: MessageBubbleProps) => {
-  return (
-    <div className={`flex ${message.isUser ? "justify-end" : "justify-start"}`}>
-      <div
-        className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl ${
-          message.isUser
-            ? "bg-[#cf6b47]/15 text-stone-100 border border-[#cf6b47]/25"
-            : "bg-stone-800 text-stone-200 border border-stone-700/60"
-        }`}
-      >
-        <div className="prose prose-sm prose-invert max-w-none prose-p:text-stone-200 prose-strong:text-stone-100">
-          <ReactMarkdown>{message.text}</ReactMarkdown>
+  const time = message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+  if (message.isUser) {
+    return (
+      <div style={{ marginBottom: "12px" }}>
+        {/* Prompt line */}
+        <div style={{ display: "flex", alignItems: "flex-start", gap: "6px" }}>
+          <span style={{ color: "var(--term-green)", flexShrink: 0, marginTop: "1px" }}>❯</span>
+          <div style={{ flex: 1 }}>
+            <span style={{ color: "var(--term-dim)", fontSize: "11px" }}>user</span>
+            <span style={{ color: "var(--term-dim)" }}>: </span>
+            <span style={{ color: "var(--term-text)" }}>{message.text}</span>
+          </div>
         </div>
-        <p className={`text-xs mt-1.5 ${message.isUser ? "text-stone-400" : "text-stone-500"}`}>
-          {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-        </p>
+        <div style={{ fontSize: "10px", color: "var(--term-dim)", paddingLeft: "22px", marginTop: "2px" }}>
+          {time}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ marginBottom: "12px" }}>
+      {/* AI response */}
+      <div style={{ display: "flex", alignItems: "flex-start", gap: "6px" }}>
+        <span style={{ color: "var(--term-blue)", flexShrink: 0, fontSize: "11px", marginTop: "2px" }}>ai</span>
+        <div style={{ flex: 1 }}>
+          <span style={{ color: "var(--term-dim)" }}>: </span>
+          <span
+            style={{ color: "var(--term-text)" }}
+            className="prose prose-sm max-w-none"
+          >
+            <ReactMarkdown
+              components={{
+                p: ({ children }) => (
+                  <span style={{ display: "block", lineHeight: "1.6", color: "var(--term-text)" }}>
+                    {children}
+                  </span>
+                ),
+                strong: ({ children }) => (
+                  <strong style={{ color: "var(--term-green)", fontWeight: 600 }}>{children}</strong>
+                ),
+                em: ({ children }) => (
+                  <em style={{ color: "var(--term-yellow)" }}>{children}</em>
+                ),
+                code: ({ children }) => (
+                  <code
+                    style={{
+                      backgroundColor: "var(--term-bg2)",
+                      border: "1px solid var(--term-border)",
+                      padding: "0 4px",
+                      color: "var(--term-cyan)",
+                      fontSize: "12px",
+                    }}
+                  >
+                    {children}
+                  </code>
+                ),
+                ul: ({ children }) => (
+                  <ul style={{ paddingLeft: "16px", margin: "4px 0", color: "var(--term-text)" }}>{children}</ul>
+                ),
+                li: ({ children }) => (
+                  <li style={{ listStyleType: "none", paddingLeft: "0", color: "var(--term-text)" }}>
+                    <span style={{ color: "var(--term-green)", marginRight: "6px" }}>·</span>
+                    {children}
+                  </li>
+                ),
+              }}
+            >
+              {message.text}
+            </ReactMarkdown>
+          </span>
+        </div>
+      </div>
+      <div style={{ fontSize: "10px", color: "var(--term-dim)", paddingLeft: "22px", marginTop: "2px" }}>
+        {time}
       </div>
     </div>
   );

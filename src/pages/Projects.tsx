@@ -1,133 +1,267 @@
 import { personalInfo } from "@/data/personalInfo";
-import { ExternalLink, Github, Globe, Award, Code } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Link, useLocation } from "react-router-dom";
 
 const NAV_LINKS = [
-  { to: "/", label: "Chat" },
-  { to: "/resume", label: "Resume" },
-  { to: "/projects", label: "Projects" },
+  { to: "/", label: "~/chat" },
+  { to: "/resume", label: "~/resume" },
+  { to: "/projects", label: "~/projects" },
 ];
 
 const Projects = () => {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-stone-950">
-      <div className="relative z-10">
-        {/* Header Navigation */}
-        <header className="py-5 px-6 border-b border-stone-800/60">
-          <nav className="max-w-4xl mx-auto">
-            <div className="flex space-x-7">
-              {NAV_LINKS.map(({ to, label }) => (
+    <div className="min-h-screen" style={{ backgroundColor: "var(--term-bg)", color: "var(--term-text)" }}>
+      {/* Terminal title bar */}
+      <header style={{ borderBottom: "1px solid var(--term-border)", backgroundColor: "var(--term-bg2)" }}>
+        <div className="max-w-4xl mx-auto px-4 py-0 flex items-stretch gap-0">
+          <div className="flex gap-1.5 items-center px-4 shrink-0">
+            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "var(--term-red)" }} />
+            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "var(--term-yellow)" }} />
+            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "var(--term-green)" }} />
+          </div>
+          <nav className="flex items-stretch flex-1">
+            {NAV_LINKS.map(({ to, label }) => {
+              const isActive = location.pathname === to;
+              return (
                 <Link
                   key={to}
                   to={to}
-                  className={`text-sm font-medium transition-colors pb-1 ${
-                    location.pathname === to
-                      ? "text-[#cf6b47] border-b border-[#cf6b47]/70"
-                      : "text-stone-400 hover:text-stone-200"
-                  }`}
+                  style={{
+                    color: isActive ? "var(--term-text)" : "var(--term-dim)",
+                    backgroundColor: isActive ? "var(--term-bg)" : "transparent",
+                    padding: "8px 16px",
+                    fontSize: "12px",
+                    borderLeft: `1px solid ${isActive ? "var(--term-border)" : "transparent"}`,
+                    borderRight: `1px solid ${isActive ? "var(--term-border)" : "transparent"}`,
+                    borderTop: `2px solid ${isActive ? "var(--term-green)" : "transparent"}`,
+                    borderBottom: `1px solid ${isActive ? "var(--term-bg)" : "transparent"}`,
+                    display: "flex",
+                    alignItems: "center",
+                    textDecoration: "none",
+                    transition: "color 0.15s",
+                    marginBottom: isActive ? "-1px" : "0",
+                  }}
                 >
                   {label}
                 </Link>
-              ))}
-            </div>
+              );
+            })}
           </nav>
-        </header>
+          <div className="flex items-center px-4 shrink-0" style={{ fontSize: "11px", color: "var(--term-dim)" }}>
+            spectual@github.io
+          </div>
+        </div>
+      </header>
 
-        {/* Projects Content */}
-        <div className="px-6 py-8">
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-stone-900 rounded-2xl border border-stone-800 p-8">
-              <div className="mb-8">
-                <h1 className="text-3xl font-bold text-stone-100 mb-2 tracking-tight">Projects</h1>
-                <p className="text-stone-400 text-base">
-                  Explore my technical projects and research work
-                </p>
+      <div className="px-4 py-6">
+        <div className="max-w-4xl mx-auto">
+          <div style={{ border: "1px solid var(--term-border)", backgroundColor: "var(--term-bg)" }}>
+            {/* Title bar */}
+            <div
+              style={{
+                borderBottom: "1px solid var(--term-border)",
+                backgroundColor: "var(--term-bg2)",
+                padding: "6px 16px",
+                fontSize: "12px",
+                color: "var(--term-dim)",
+              }}
+            >
+              bash — ~/projects
+            </div>
+
+            <div style={{ padding: "20px 24px" }}>
+              {/* Command header */}
+              <div style={{ marginBottom: "20px", fontSize: "13px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "4px" }}>
+                  <span style={{ color: "var(--term-green)" }}>spectual</span>
+                  <span style={{ color: "var(--term-dim)" }}>@</span>
+                  <span style={{ color: "var(--term-blue)" }}>github.io</span>
+                  <span style={{ color: "var(--term-text)" }}>:~$</span>
+                  <span style={{ color: "var(--term-text)", marginLeft: "4px" }}>
+                    ls -la ~/projects
+                  </span>
+                </div>
+                <div style={{ color: "var(--term-dim)", fontSize: "11px" }}>
+                  total {personalInfo.projects.length} entries
+                </div>
               </div>
 
-              {/* Projects Grid */}
+              {/* Projects grid */}
               <div className="grid gap-4 lg:grid-cols-2">
-                {personalInfo.projects.map((project, index) => (
-                  <Card
-                    key={index}
-                    className="bg-stone-800/50 border-stone-700/60 hover:bg-stone-800 hover:border-stone-700 transition-all duration-200"
-                  >
-                    <CardHeader className="pb-2.5">
-                      <div className="flex items-start justify-between gap-3">
-                        <CardTitle className="text-stone-100 text-base leading-snug flex items-center gap-2">
-                          {project.name.includes("Patent") && (
-                            <Award className="w-4 h-4 text-[#cf6b47] shrink-0" />
-                          )}
-                          {project.name}
-                        </CardTitle>
-                        <div className="flex gap-1.5 shrink-0">
-                          {"githubUrl" in project && project.githubUrl && (
+                {personalInfo.projects.map((project, index) => {
+                  const isPatent = project.name.includes("Patent");
+                  const hasGithub = "githubUrl" in project && project.githubUrl;
+                  const hasLive = "liveUrl" in project && project.liveUrl;
+
+                  return (
+                    <div
+                      key={index}
+                      style={{
+                        border: "1px solid var(--term-border)",
+                        backgroundColor: "var(--term-bg)",
+                        padding: "16px",
+                        transition: "border-color 0.15s",
+                        cursor: "default",
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.borderColor = "var(--term-green)")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.borderColor = "var(--term-border)")
+                      }
+                    >
+                      {/* Project name row */}
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "flex-start",
+                          justifyContent: "space-between",
+                          gap: "8px",
+                          marginBottom: "8px",
+                        }}
+                      >
+                        <div style={{ flex: 1 }}>
+                          <span style={{ color: "var(--term-dim)", fontSize: "11px", marginRight: "6px" }}>
+                            {String(index + 1).padStart(2, "0")}.
+                          </span>
+                          <span
+                            style={{
+                              color: isPatent ? "var(--term-yellow)" : "var(--term-green)",
+                              fontWeight: 600,
+                              fontSize: "13px",
+                            }}
+                          >
+                            {isPatent ? "⊕ " : ""}
+                            {project.name}
+                          </span>
+                        </div>
+                        {/* Links */}
+                        <div style={{ display: "flex", gap: "6px", flexShrink: 0 }}>
+                          {hasGithub && (
                             <a
                               href={project.githubUrl as string}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="p-1.5 bg-stone-700/50 hover:bg-stone-700 text-stone-400 hover:text-stone-200 rounded-lg transition-all duration-150"
-                              title="View on GitHub"
+                              style={{
+                                fontSize: "11px",
+                                color: "var(--term-dim)",
+                                textDecoration: "none",
+                                border: "1px solid var(--term-border)",
+                                padding: "1px 6px",
+                                transition: "all 0.15s",
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.color = "var(--term-blue)";
+                                e.currentTarget.style.borderColor = "var(--term-blue)";
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.color = "var(--term-dim)";
+                                e.currentTarget.style.borderColor = "var(--term-border)";
+                              }}
                             >
-                              <Github className="w-3.5 h-3.5" />
+                              [github]
                             </a>
                           )}
-                          {"liveUrl" in project && project.liveUrl && (
+                          {hasLive && (
                             <a
                               href={project.liveUrl as string}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="p-1.5 bg-stone-700/50 hover:bg-stone-700 text-stone-400 hover:text-stone-200 rounded-lg transition-all duration-150"
-                              title="View Live"
+                              style={{
+                                fontSize: "11px",
+                                color: "var(--term-dim)",
+                                textDecoration: "none",
+                                border: "1px solid var(--term-border)",
+                                padding: "1px 6px",
+                                transition: "all 0.15s",
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.color = "var(--term-green)";
+                                e.currentTarget.style.borderColor = "var(--term-green)";
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.color = "var(--term-dim)";
+                                e.currentTarget.style.borderColor = "var(--term-border)";
+                              }}
                             >
-                              <ExternalLink className="w-3.5 h-3.5" />
+                              [live]
                             </a>
                           )}
                         </div>
                       </div>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-stone-400 leading-relaxed mb-3.5 text-sm">
+
+                      {/* Description */}
+                      <p
+                        style={{
+                          color: "var(--term-dim)",
+                          fontSize: "12px",
+                          lineHeight: "1.6",
+                          marginBottom: "10px",
+                          borderLeft: "2px solid var(--term-border)",
+                          paddingLeft: "10px",
+                        }}
+                      >
                         {project.description}
                       </p>
-                      <div className="flex flex-wrap gap-1.5">
+
+                      {/* Tech tags */}
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
                         {project.technologies.map((tech, techIndex) => (
-                          <Badge
+                          <span
                             key={techIndex}
-                            variant="secondary"
-                            className="bg-stone-700/50 text-stone-400 border-stone-600/50 hover:bg-stone-700 text-xs px-2 py-0.5"
+                            style={{
+                              border: "1px solid var(--term-border)",
+                              color: "var(--term-dim)",
+                              fontSize: "10px",
+                              padding: "1px 6px",
+                              fontFamily: "inherit",
+                            }}
                           >
-                            <Code className="w-3 h-3 mr-1" />
                             {tech}
-                          </Badge>
+                          </span>
                         ))}
                       </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                    </div>
+                  );
+                })}
               </div>
 
-              {/* More Projects */}
-              <div className="mt-6 p-5 bg-stone-800/40 rounded-xl border border-stone-700/60">
-                <h3 className="text-base font-semibold text-stone-200 mb-2 flex items-center gap-2">
-                  <Globe className="w-4 h-4 text-stone-400" />
-                  More Projects
-                </h3>
-                <p className="text-stone-400 text-sm mb-4">
-                  For more detailed project information, code repositories, and live demos,
-                  feel free to ask me in the Chat section or visit my GitHub profile.
-                </p>
+              {/* More projects footer */}
+              <div
+                style={{
+                  marginTop: "16px",
+                  padding: "12px 16px",
+                  border: "1px solid var(--term-border)",
+                  backgroundColor: "var(--term-bg2)",
+                  fontSize: "12px",
+                }}
+              >
+                <div style={{ color: "var(--term-dim)", marginBottom: "8px" }}>
+                  # for more repos and code, visit github profile
+                </div>
                 <a
                   href={personalInfo.social.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 border border-stone-700 text-stone-400 hover:border-stone-600 hover:text-stone-200 rounded-full transition-all duration-150 text-sm font-medium"
+                  style={{
+                    color: "var(--term-blue)",
+                    textDecoration: "none",
+                    border: "1px solid var(--term-border)",
+                    padding: "4px 12px",
+                    display: "inline-block",
+                    transition: "all 0.15s",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = "var(--term-blue)";
+                    e.currentTarget.style.backgroundColor = "rgba(88, 166, 255, 0.08)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "var(--term-border)";
+                    e.currentTarget.style.backgroundColor = "transparent";
+                  }}
                 >
-                  <Github className="w-4 h-4" />
-                  View GitHub Profile
+                  [→ github.com/spectual]
                 </a>
               </div>
             </div>
