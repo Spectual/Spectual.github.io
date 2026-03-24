@@ -103,12 +103,12 @@ const GetInTouchSection = () => {
 
             {/* Two column layout */}
             <div
-              style={{ display: "grid", gap: "32px" }}
-              className="lg:grid-cols-2"
+              style={{ display: "grid" }}
+              className="gap-6 lg:gap-8 lg:grid-cols-2"
             >
               {/* Form */}
               <form onSubmit={handleSubmit}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "12px" }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
                   <div>
                     <label style={labelStyle}>
                       name <span style={{ color: "var(--term-red)" }}>*</span>

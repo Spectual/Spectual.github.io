@@ -23,7 +23,7 @@ const Projects = () => {
         {/* Terminal title bar */}
         <header style={{ borderBottom: "1px solid var(--term-border)", backgroundColor: "var(--term-bg2)" }}>
           <div className="max-w-4xl mx-auto px-4 py-0 flex items-stretch gap-0">
-            <div className="flex gap-1.5 items-center px-4 shrink-0">
+            <div className="hidden sm:flex gap-1.5 items-center px-4 shrink-0">
               <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "var(--term-red)" }} />
               <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "var(--term-yellow)" }} />
               <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "var(--term-green)" }} />
@@ -35,18 +35,14 @@ const Projects = () => {
                   <Link
                     key={to}
                     to={to}
-                    className={isActive ? "nav-active" : "nav-tab"}
+                    className={`${isActive ? "nav-active" : "nav-tab"} flex items-center text-[11px] sm:text-[12px] px-2.5 sm:px-4 py-1.5 sm:py-2`}
                     style={{
                       color: isActive ? "var(--term-text)" : "var(--term-dim)",
                       backgroundColor: isActive ? "var(--term-bg)" : "transparent",
-                      padding: "8px 16px",
-                      fontSize: "12px",
                       borderLeft: `1px solid ${isActive ? "var(--term-border)" : "transparent"}`,
                       borderRight: `1px solid ${isActive ? "var(--term-border)" : "transparent"}`,
                       borderTop: `2px solid ${isActive ? "var(--term-green)" : "transparent"}`,
                       borderBottom: `1px solid ${isActive ? "var(--term-bg)" : "transparent"}`,
-                      display: "flex",
-                      alignItems: "center",
                       textDecoration: "none",
                       transition: "all 0.15s",
                       marginBottom: isActive ? "-1px" : "0",
@@ -57,7 +53,7 @@ const Projects = () => {
                 );
               })}
             </nav>
-            <div className="flex items-center px-4 shrink-0" style={{ fontSize: "11px", color: "var(--term-dim)" }}>
+            <div className="hidden sm:flex items-center px-4 shrink-0" style={{ fontSize: "11px", color: "var(--term-dim)" }}>
               spectual@github.io
             </div>
           </div>

@@ -12,6 +12,9 @@ const MatrixRain = () => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    // Respect reduced motion preference
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     // Lower density on mobile
     const isMobile = window.innerWidth < 768;
 

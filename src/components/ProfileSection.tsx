@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { personalInfo } from "@/data/personalInfo";
 import { useTypewriter } from "@/hooks/useTypewriter";
 
@@ -15,18 +15,37 @@ const BAR_TOTAL = 20;
 
 const SkillBar = ({ name, level, delay }: { name: string; level: number; delay: number }) => {
   const [filled, setFilled] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const target = Math.round((level / 100) * BAR_TOTAL);
 
   useEffect(() => {
-    const t = setTimeout(() => {
-      setFilled(Math.round((level / 100) * BAR_TOTAL));
-    }, delay);
-    return () => clearTimeout(t);
-  }, [level, delay]);
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+        let current = 0;
+        const step = () => {
+          if (current >= target) return;
+          current++;
+          setFilled(current);
+          setTimeout(step, 45);
+        };
+        setTimeout(step, delay);
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [target, delay]);
 
   const empty = BAR_TOTAL - filled;
 
   return (
     <div
+      ref={ref}
       style={{
         display: "flex",
         alignItems: "center",
@@ -36,18 +55,11 @@ const SkillBar = ({ name, level, delay }: { name: string; level: number; delay: 
         fontFamily: "inherit",
       }}
     >
-      <span style={{ color: "var(--term-blue)", minWidth: "72px", display: "inline-block" }}>
+      <span style={{ color: "var(--term-blue)", minWidth: "60px", display: "inline-block" }}>
         {name}
       </span>
       <span>
-        <span
-          style={{
-            color: "var(--term-green)",
-            transition: "all 0.8s ease-out",
-          }}
-        >
-          {"█".repeat(filled)}
-        </span>
+        <span style={{ color: "var(--term-green)" }}>{"█".repeat(filled)}</span>
         <span style={{ color: "var(--term-border)" }}>{"░".repeat(empty)}</span>
       </span>
       <span style={{ color: "var(--term-dim)" }}>{level}%</span>
@@ -56,39 +68,47 @@ const SkillBar = ({ name, level, delay }: { name: string; level: number; delay: 
 };
 
 // ── Auto-typing CLI demo ───────────────────────────────────────────────────
-const DEMO_COMMANDS = [
-  "cat about.txt",
-  "python train.py --model multimodal-llm",
-  "git push origin main",
-  "docker run -p 8080:8080 portfolio",
+const DEMO_COMMANDS: { cmd: string; output: string }[] = [
+  { cmd: "cat about.txt", output: "> ML Engineer | Boston, MA | 3+ yrs research" },
+  {
+    cmd: "python train.py --model multimodal-llm",
+    output: "Training...  Epoch 1/100  loss=0.342\nDone ✓  best_val_loss=0.184",
+  },
+  {
+    cmd: "git push origin main",
+    output: "Counting objects: 5, done.\nTo github.com:spectual → main ✓",
+  },
+  { cmd: "docker run -p 8080:8080 portfolio", output: "Container started. Listening on :8080 ✓" },
 ];
 
 const AutoTypeCLI = () => {
   const [text, setText] = useState("");
   const [cmdIndex, setCmdIndex] = useState(0);
-  const [phase, setPhase] = useState<"typing" | "pausing" | "deleting">("typing");
+  const [phase, setPhase] = useState<"typing" | "output" | "deleting">("typing");
 
   useEffect(() => {
-    const cmd = DEMO_COMMANDS[cmdIndex];
+    const { cmd } = DEMO_COMMANDS[cmdIndex];
 
     if (phase === "typing") {
       if (text.length < cmd.length) {
-        const t = setTimeout(() => setText(cmd.slice(0, text.length + 1)), 65);
+        // Random typing speed: 50–150ms per char
+        const delay = 50 + Math.random() * 100;
+        const t = setTimeout(() => setText(cmd.slice(0, text.length + 1)), delay);
         return () => clearTimeout(t);
       } else {
-        const t = setTimeout(() => setPhase("pausing"), 1600);
+        const t = setTimeout(() => setPhase("output"), 300);
         return () => clearTimeout(t);
       }
     }
 
-    if (phase === "pausing") {
-      const t = setTimeout(() => setPhase("deleting"), 500);
+    if (phase === "output") {
+      const t = setTimeout(() => setPhase("deleting"), 2200);
       return () => clearTimeout(t);
     }
 
     if (phase === "deleting") {
       if (text.length > 0) {
-        const t = setTimeout(() => setText(text.slice(0, -1)), 28);
+        const t = setTimeout(() => setText(text.slice(0, -1)), 25);
         return () => clearTimeout(t);
       } else {
         setCmdIndex((i) => (i + 1) % DEMO_COMMANDS.length);
@@ -96,6 +116,8 @@ const AutoTypeCLI = () => {
       }
     }
   }, [text, cmdIndex, phase]);
+
+  const { output } = DEMO_COMMANDS[cmdIndex];
 
   return (
     <div
@@ -112,8 +134,22 @@ const AutoTypeCLI = () => {
         <span style={{ color: "var(--term-blue)" }}>github.io</span>
         <span style={{ color: "var(--term-text)" }}>:~$</span>
         <span style={{ color: "var(--term-text)", marginLeft: "4px" }}>{text}</span>
-        <span className="cursor-blink" />
+        {phase !== "output" && <span className="cursor-blink" />}
       </div>
+      {phase === "output" && (
+        <div
+          style={{
+            color: "var(--term-dim)",
+            marginTop: "6px",
+            whiteSpace: "pre-line",
+            borderLeft: "2px solid var(--term-border)",
+            paddingLeft: "8px",
+            fontSize: "11px",
+          }}
+        >
+          {output}
+        </div>
+      )}
     </div>
   );
 };
@@ -154,7 +190,7 @@ const ProfileSection = () => {
           </div>
 
           {/* Content */}
-          <div style={{ padding: "24px", fontSize: "13px" }}>
+          <div style={{ padding: "16px", fontSize: "13px" }} className="sm:p-6">
             {/* Command line */}
             <div style={{ marginBottom: "16px", display: "flex", alignItems: "center", gap: "6px" }}>
               <span style={{ color: "var(--term-green)" }}>spectual</span>
@@ -164,19 +200,34 @@ const ProfileSection = () => {
               <span style={{ color: "var(--term-text)", marginLeft: "4px" }}>neofetch</span>
             </div>
 
-            {/* neofetch layout */}
+            {/* neofetch layout — vertical on mobile, horizontal on lg */}
             <div
-              style={{ display: "flex", flexDirection: "column", gap: "24px" }}
-              className="lg:flex-row"
+              style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+              className="lg:flex-row items-center lg:items-start lg:gap-6"
             >
               {/* Avatar column */}
-              <div style={{ flexShrink: 0 }}>
+              <div style={{ flexShrink: 0, textAlign: "center" }}>
+                {/* ASCII-style terminal frame */}
+                <div
+                  style={{
+                    fontFamily: "inherit",
+                    fontSize: "12px",
+                    color: "var(--term-border)",
+                    lineHeight: 1,
+                    userSelect: "none",
+                  }}
+                >
+                  ┌────────────────┐
+                </div>
                 <div
                   style={{
                     border: "1px solid var(--term-border)",
+                    borderTop: "none",
+                    borderBottom: "none",
                     overflow: "hidden",
                     width: "140px",
                     height: "140px",
+                    display: "inline-block",
                   }}
                 >
                   <img
@@ -186,24 +237,36 @@ const ProfileSection = () => {
                     loading="eager"
                   />
                 </div>
-                <div style={{ marginTop: "6px", fontSize: "11px", color: "var(--term-green)", textAlign: "center" }}>
+                <div
+                  style={{
+                    fontFamily: "inherit",
+                    fontSize: "12px",
+                    color: "var(--term-border)",
+                    lineHeight: 1,
+                    userSelect: "none",
+                  }}
+                >
+                  └────────────────┘
+                </div>
+                <div style={{ marginTop: "4px", fontSize: "11px", color: "var(--term-green)" }}>
                   ● available
                 </div>
               </div>
 
               {/* Info column */}
-              <div style={{ flex: 1, fontFamily: "inherit" }}>
+              <div style={{ flex: 1, fontFamily: "inherit", width: "100%" }}>
                 {/* Name — typewriter */}
                 <div
                   style={{
                     color: "var(--term-green)",
                     fontWeight: 700,
-                    fontSize: "20px",
+                    fontSize: "18px",
                     marginBottom: "2px",
                     display: "flex",
                     alignItems: "center",
                     gap: "2px",
                   }}
+                  className="sm:text-xl"
                 >
                   {displayedName}
                   {!nameTyped && <span className="cursor-blink" />}
@@ -281,15 +344,45 @@ const ProfileSection = () => {
                   {"─".repeat(36)}
                 </div>
 
-                {/* Skills text */}
+                {/* Skills text — wraps on mobile */}
                 <div style={{ marginBottom: "4px", lineHeight: "1.6" }}>
                   <span style={{ color: "var(--term-blue)" }}>skills</span>
                   <span style={{ color: "var(--term-dim)" }}>: </span>
-                  <span style={{ color: "var(--term-text)" }}>{skills.slice(0, 5).join(" | ")}</span>
+                  <span
+                    style={{
+                      color: "var(--term-text)",
+                      display: "inline-flex",
+                      flexWrap: "wrap",
+                      gap: "0 2px",
+                    }}
+                  >
+                    {skills.slice(0, 5).map((s, i) => (
+                      <span key={s}>
+                        {s}
+                        {i < 4 && <span style={{ color: "var(--term-dim)" }}> | </span>}
+                      </span>
+                    ))}
+                  </span>
                 </div>
                 {skills.length > 5 && (
-                  <div style={{ marginBottom: "4px", lineHeight: "1.6", paddingLeft: "54px" }}>
-                    <span style={{ color: "var(--term-text)" }}>{skills.slice(5).join(" | ")}</span>
+                  <div
+                    style={{
+                      marginBottom: "4px",
+                      lineHeight: "1.6",
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: "0 2px",
+                      paddingLeft: "54px",
+                    }}
+                  >
+                    {skills.slice(5).map((s, i) => (
+                      <span key={s} style={{ color: "var(--term-text)" }}>
+                        {s}
+                        {i < skills.slice(5).length - 1 && (
+                          <span style={{ color: "var(--term-dim)" }}> | </span>
+                        )}
+                      </span>
+                    ))}
                   </div>
                 )}
 
@@ -303,7 +396,7 @@ const ProfileSection = () => {
                     # proficiency
                   </div>
                   {SKILL_LEVELS.map((s, i) => (
-                    <SkillBar key={s.name} name={s.name} level={s.level} delay={i * 120 + 400} />
+                    <SkillBar key={s.name} name={s.name} level={s.level} delay={i * 120} />
                   ))}
                 </div>
 

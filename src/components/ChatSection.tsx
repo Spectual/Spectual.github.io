@@ -262,7 +262,7 @@ const ChatSection = () => {
             ref={scrollContainerRef}
             className="terminal-scroll"
             style={{
-              height: "384px",
+              height: "min(384px, 50dvh)",
               overflowY: "auto",
               padding: "16px",
               fontFamily: "inherit",
@@ -270,12 +270,13 @@ const ChatSection = () => {
             }}
           >
             {messages.map((message) => (
-              <MessageBubble
-                key={message.id}
-                message={message}
-                isTyping={typingMessageId === message.id}
-                onTypingComplete={() => setTypingMessageId(null)}
-              />
+              <div key={message.id} className="msg-slide-up">
+                <MessageBubble
+                  message={message}
+                  isTyping={typingMessageId === message.id}
+                  onTypingComplete={() => setTypingMessageId(null)}
+                />
+              </div>
             ))}
             {isLoading && <ThinkingIndicator />}
             <div ref={messagesEndRef} />
@@ -294,7 +295,7 @@ const ChatSection = () => {
               <div style={{ fontSize: "11px", color: "var(--term-dim)", marginBottom: "6px" }}>
                 # quick commands:
               </div>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+              <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-1.5">
                 {PREDEFINED_QUESTIONS.map((question, index) => (
                   <button
                     key={index}
@@ -364,6 +365,7 @@ const ChatSection = () => {
               <button
                 onClick={() => handleSendMessage(inputValue)}
                 disabled={isLoading || !inputValue.trim() || !isServerOnline}
+                className="hidden sm:block"
                 style={{
                   background: "transparent",
                   border: "none",
