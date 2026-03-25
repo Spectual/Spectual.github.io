@@ -41,7 +41,7 @@ const Index = () => {
       {/* Main content */}
       <div
         className="page-enter"
-        style={{ position: "relative", zIndex: 1, opacity: booting ? 0 : 1, transition: "opacity 0.3s" }}
+        style={{ position: "relative", zIndex: 1, opacity: booting ? 0 : 1, transition: booting ? "none" : "opacity 0.45s ease-in" }}
       >
         <TerminalHeader />
 

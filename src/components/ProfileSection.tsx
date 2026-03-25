@@ -13,39 +13,28 @@ const SKILL_LEVELS = [
 
 const BAR_TOTAL = 20;
 
-const SkillBar = ({ name, level, delay }: { name: string; level: number; delay: number }) => {
+const SkillBar = ({ name, level, delay, started }: { name: string; level: number; delay: number; started: boolean }) => {
   const [filled, setFilled] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
   const target = Math.round((level / 100) * BAR_TOTAL);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        observer.disconnect();
-        let current = 0;
-        const step = () => {
-          if (current >= target) return;
-          current++;
-          setFilled(current);
-          setTimeout(step, 45);
-        };
-        setTimeout(step, delay);
-      },
-      { threshold: 0.5 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [target, delay]);
+    if (!started) return;
+    let current = 0;
+    let timer: ReturnType<typeof setTimeout>;
+    const step = () => {
+      if (current >= target) return;
+      current++;
+      setFilled(current);
+      timer = setTimeout(step, 45);
+    };
+    timer = setTimeout(step, delay);
+    return () => clearTimeout(timer);
+  }, [started, target, delay]);
 
   const empty = BAR_TOTAL - filled;
 
   return (
     <div
-      ref={ref}
       style={{
         display: "flex",
         alignItems: "center",
@@ -157,6 +146,25 @@ const AutoTypeCLI = () => {
 // ── ProfileSection ─────────────────────────────────────────────────────────
 const ProfileSection = () => {
   const skills = personalInfo.skills;
+
+  // Single IntersectionObserver for all skill bars
+  const [skillsStarted, setSkillsStarted] = useState(false);
+  const skillsContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = skillsContainerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+        setSkillsStarted(true);
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   // Chained typewriter: name first, then role after name finishes
   const [nameTyped, setNameTyped] = useState(false);
@@ -391,12 +399,12 @@ const ProfileSection = () => {
                 </div>
 
                 {/* Skills progress bars */}
-                <div style={{ marginBottom: "12px" }}>
+                <div ref={skillsContainerRef} style={{ marginBottom: "12px" }}>
                   <div style={{ fontSize: "11px", color: "var(--term-dim)", marginBottom: "8px" }}>
                     # proficiency
                   </div>
                   {SKILL_LEVELS.map((s, i) => (
-                    <SkillBar key={s.name} name={s.name} level={s.level} delay={i * 120} />
+                    <SkillBar key={s.name} name={s.name} level={s.level} delay={i * 120} started={skillsStarted} />
                   ))}
                 </div>
 

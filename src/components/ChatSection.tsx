@@ -70,6 +70,9 @@ const ChatSection = () => {
   const isInitialLoad = useRef(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const historyRef = useRef<string[]>([]);
+  const historyIndexRef = useRef(-1);
+  const pendingInputRef = useRef("");
 
   const isNearBottom = (): boolean => {
     const el = scrollContainerRef.current;
@@ -113,8 +116,12 @@ const ChatSection = () => {
     // Finish any ongoing typewriter immediately
     setTypingMessageId(null);
 
+    historyRef.current = [messageText, ...historyRef.current];
+    historyIndexRef.current = -1;
+    pendingInputRef.current = "";
+
     const userMessage: Message = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       text: messageText,
       isUser: true,
       timestamp: new Date(),
@@ -127,7 +134,7 @@ const ChatSection = () => {
 
     try {
       const response = await sendMessage(messageText);
-      const aiId = (Date.now() + 1).toString();
+      const aiId = crypto.randomUUID();
       const aiMessage: Message = {
         id: aiId,
         text: response.success
@@ -145,7 +152,7 @@ const ChatSection = () => {
       setMessages((prev) => [
         ...prev,
         {
-          id: (Date.now() + 1).toString(),
+          id: crypto.randomUUID(),
           text: "Sorry, I'm having trouble connecting right now. Please try again later.",
           isUser: false,
           timestamp: new Date(),
@@ -161,6 +168,26 @@ const ChatSection = () => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage(inputValue);
+      return;
+    }
+    const history = historyRef.current;
+    if (e.key === "ArrowUp" && history.length > 0) {
+      e.preventDefault();
+      if (historyIndexRef.current === -1) {
+        pendingInputRef.current = inputValue;
+      }
+      const next = Math.min(historyIndexRef.current + 1, history.length - 1);
+      historyIndexRef.current = next;
+      setInputValue(history[next]);
+    } else if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (historyIndexRef.current <= 0) {
+        historyIndexRef.current = -1;
+        setInputValue(pendingInputRef.current);
+      } else {
+        historyIndexRef.current--;
+        setInputValue(history[historyIndexRef.current]);
+      }
     }
   };
 

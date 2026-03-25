@@ -24,24 +24,26 @@ export const useTypewriter = (text: string, options?: TypewriterOptions) => {
     setDisplayed("");
     setDone(false);
     let i = 0;
+    let cancelled = false;
     let delayTimer: ReturnType<typeof setTimeout>;
-    let intervalTimer: ReturnType<typeof setInterval>;
 
-    delayTimer = setTimeout(() => {
-      intervalTimer = setInterval(() => {
-        i++;
-        setDisplayed(text.slice(0, i));
-        if (i >= text.length) {
-          clearInterval(intervalTimer);
-          setDone(true);
-          onCompleteRef.current?.();
-        }
-      }, speed);
-    }, startDelay);
+    const step = () => {
+      if (cancelled) return;
+      i++;
+      setDisplayed(text.slice(0, i));
+      if (i >= text.length) {
+        setDone(true);
+        onCompleteRef.current?.();
+      } else {
+        delayTimer = setTimeout(step, speed);
+      }
+    };
+
+    delayTimer = setTimeout(step, startDelay);
 
     return () => {
+      cancelled = true;
       clearTimeout(delayTimer);
-      clearInterval(intervalTimer);
     };
   }, [text, speed, startDelay]);
 

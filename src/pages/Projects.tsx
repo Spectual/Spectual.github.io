@@ -58,7 +58,7 @@ const Projects = () => {
 
                     return (
                       <div
-                        key={index}
+                        key={project.name}
                         className="project-card"
                         style={{
                           border: "1px solid var(--term-border)",
@@ -152,9 +152,9 @@ const Projects = () => {
 
                         {/* Tech tags */}
                         <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
-                          {project.technologies.map((tech, techIndex) => (
+                          {project.technologies.map((tech) => (
                             <span
-                              key={techIndex}
+                              key={tech}
                               style={{
                                 border: "1px solid var(--term-border)",
                                 color: "var(--term-dim)",

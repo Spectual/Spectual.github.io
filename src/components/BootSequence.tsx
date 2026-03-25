@@ -25,7 +25,7 @@ const BootSequence = ({ onComplete }: BootSequenceProps) => {
     completedRef.current = true;
     timersRef.current.forEach(clearTimeout);
     setFading(true);
-    setTimeout(onComplete, 450);
+    setTimeout(onComplete, 380);
   }, [onComplete]);
 
   useEffect(() => {
