@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
+import { personalInfo } from "@/data/personalInfo";
 
 const GetInTouchSection = () => {
   const [form, setForm] = useState({ name: "", company: "", email: "", message: "" });
@@ -43,7 +44,7 @@ const GetInTouchSection = () => {
         form.message,
       ].join("\n")
     );
-    window.location.href = `mailto:baoyifei@bu.edu?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:${personalInfo.email}?subject=${subject}&body=${body}`;
     setSubmitting(false);
   };
 
@@ -110,10 +111,11 @@ const GetInTouchSection = () => {
               <form onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
                   <div>
-                    <label style={labelStyle}>
+                    <label htmlFor="contact-name" style={labelStyle}>
                       name <span style={{ color: "var(--term-red)" }}>*</span>
                     </label>
                     <input
+                      id="contact-name"
                       placeholder="your name"
                       value={form.name}
                       onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -123,11 +125,12 @@ const GetInTouchSection = () => {
                     />
                   </div>
                   <div>
-                    <label style={labelStyle}>
+                    <label htmlFor="contact-company" style={labelStyle}>
                       company{" "}
                       <span style={{ color: "var(--term-dim)", fontSize: "10px" }}>(optional)</span>
                     </label>
                     <input
+                      id="contact-company"
                       placeholder="company name"
                       value={form.company}
                       onChange={(e) => setForm({ ...form, company: e.target.value })}
@@ -139,10 +142,11 @@ const GetInTouchSection = () => {
                 </div>
 
                 <div style={{ marginBottom: "12px" }}>
-                  <label style={labelStyle}>
+                  <label htmlFor="contact-email" style={labelStyle}>
                     email <span style={{ color: "var(--term-red)" }}>*</span>
                   </label>
                   <input
+                    id="contact-email"
                     type="email"
                     placeholder="you@example.com"
                     value={form.email}
@@ -154,10 +158,11 @@ const GetInTouchSection = () => {
                 </div>
 
                 <div style={{ marginBottom: "16px" }}>
-                  <label style={labelStyle}>
+                  <label htmlFor="contact-message" style={labelStyle}>
                     message <span style={{ color: "var(--term-red)" }}>*</span>
                   </label>
                   <textarea
+                    id="contact-message"
                     placeholder="your message..."
                     rows={5}
                     value={form.message}
@@ -210,9 +215,9 @@ const GetInTouchSection = () => {
 
                 <div style={{ fontSize: "12px" }}>
                   {[
-                    { key: "email", value: "baoyifei@bu.edu", href: "mailto:baoyifei@bu.edu" },
-                    { key: "phone", value: "+1 857 340 3064", href: "tel:+18573403064" },
-                    { key: "location", value: "Boston, MA", href: null },
+                    { key: "email", value: personalInfo.email, href: `mailto:${personalInfo.email}` },
+                    { key: "phone", value: personalInfo.phone, href: `tel:${personalInfo.phone.replace(/\s/g, "")}` },
+                    { key: "location", value: personalInfo.location, href: null },
                   ].map(({ key, value, href }) => (
                     <div
                       key={key}
@@ -231,9 +236,8 @@ const GetInTouchSection = () => {
                       {href ? (
                         <a
                           href={href}
-                          style={{ color: "var(--term-text)", textDecoration: "none" }}
-                          onMouseEnter={(e) => (e.currentTarget.style.color = "var(--term-green)")}
-                          onMouseLeave={(e) => (e.currentTarget.style.color = "var(--term-text)")}
+                          className="contact-link"
+                          style={{ color: "var(--term-text)", textDecoration: "none", transition: "color 0.15s" }}
                         >
                           {value}
                         </a>

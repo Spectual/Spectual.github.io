@@ -15,16 +15,15 @@ const MatrixRain = () => {
     // Respect reduced motion preference
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    // Lower density on mobile
-    const isMobile = window.innerWidth < 768;
-
     const fontSize = 14;
+    let isMobile = window.innerWidth < 768;
     let columns = 0;
     let drops: number[] = [];
 
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      isMobile = window.innerWidth < 768;
       const newCols = isMobile
         ? Math.floor(canvas.width / (fontSize * 3))
         : Math.floor(canvas.width / fontSize);

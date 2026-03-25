@@ -3,13 +3,7 @@ import { AlertCircle } from "lucide-react";
 import MessageBubble from "./MessageBubble";
 import { sendMessage, checkHealth } from "@/utils/api";
 import { toast } from "sonner";
-
-interface Message {
-  id: string;
-  text: string;
-  isUser: boolean;
-  timestamp: Date;
-}
+import type { Message } from "@/types/chat";
 
 const PREDEFINED_QUESTIONS = [
   "What is your background?",
@@ -260,6 +254,8 @@ const ChatSection = () => {
           {/* Messages area */}
           <div
             ref={scrollContainerRef}
+            role="log"
+            aria-live="polite"
             className="terminal-scroll"
             style={{
               height: "min(384px, 50dvh)",
@@ -301,6 +297,7 @@ const ChatSection = () => {
                     key={index}
                     onClick={() => handleSendMessage(question)}
                     disabled={isLoading || !isServerOnline}
+                    className="chat-quick-btn"
                     style={{
                       padding: "2px 8px",
                       border: "1px solid var(--term-border)",
@@ -311,18 +308,6 @@ const ChatSection = () => {
                       fontFamily: "inherit",
                       transition: "all 0.15s",
                       opacity: isLoading || !isServerOnline ? 0.4 : 1,
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isLoading && isServerOnline) {
-                        e.currentTarget.style.borderColor = "var(--term-green)";
-                        e.currentTarget.style.color = "var(--term-green)";
-                        e.currentTarget.style.backgroundColor = "rgba(63,185,80,0.06)";
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = "var(--term-border)";
-                      e.currentTarget.style.color = "var(--term-dim)";
-                      e.currentTarget.style.backgroundColor = "transparent";
                     }}
                   >
                     [{index + 1}] {question}
