@@ -2,6 +2,7 @@ export const personalInfo = {
   name: "Yifei Bao",
   title: "AI / ML Engineer",
   email: "baoyifei@bu.edu",
+  phone: "+1 857 340 3064",
   location: "Boston, MA",
   avatar: "/avatar.webp",
   social: {

@@ -295,6 +295,40 @@
   );
 }
 
+/* Project card hover */
+.project-card:hover {
+  border-color: var(--term-green) !important;
+  background-color: rgba(63, 185, 80, 0.03) !important;
+}
+
+/* Project card link buttons */
+.project-link-github:hover {
+  color: var(--term-blue) !important;
+  border-color: var(--term-blue) !important;
+}
+.project-link-live:hover {
+  color: var(--term-green) !important;
+  border-color: var(--term-green) !important;
+}
+
+/* GitHub profile link */
+.github-profile-link:hover {
+  border-color: var(--term-blue) !important;
+  background-color: rgba(88, 166, 255, 0.08) !important;
+}
+
+/* Chat quick-question buttons */
+.chat-quick-btn:hover:not(:disabled) {
+  border-color: var(--term-green) !important;
+  color: var(--term-green) !important;
+  background-color: rgba(63, 185, 80, 0.06) !important;
+}
+
+/* Contact info links */
+.contact-link:hover {
+  color: var(--term-green) !important;
+}
+
 /* prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
   .cursor-blink,

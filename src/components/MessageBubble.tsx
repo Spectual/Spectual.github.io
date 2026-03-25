@@ -1,13 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import { useTypewriter } from "@/hooks/useTypewriter";
-
-interface Message {
-  id: string;
-  text: string;
-  isUser: boolean;
-  timestamp: Date;
-}
+import type { Message } from "@/types/chat";
 
 interface MessageBubbleProps {
   message: Message;
@@ -63,13 +57,7 @@ const MessageBubble = ({ message, isTyping = false, onTypingComplete }: MessageB
     { speed: 10, onComplete: () => onCompleteRef.current?.() }
   );
 
-  // Scroll into view as text streams in
   const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (isTyping && ref.current) {
-      ref.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    }
-  }, [displayed, isTyping]);
 
   if (message.isUser) {
     return (

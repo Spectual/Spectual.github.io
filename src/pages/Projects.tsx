@@ -1,16 +1,9 @@
 import { personalInfo } from "@/data/personalInfo";
-import { Link, useLocation } from "react-router-dom";
 import MatrixRain from "@/components/MatrixRain";
 import TerminalFooter from "@/components/TerminalFooter";
-
-const NAV_LINKS = [
-  { to: "/", label: "~/chat" },
-  { to: "/resume", label: "~/resume" },
-  { to: "/projects", label: "~/projects" },
-];
+import TerminalHeader from "@/components/TerminalHeader";
 
 const Projects = () => {
-  const location = useLocation();
 
   return (
     <div
@@ -20,44 +13,7 @@ const Projects = () => {
       <MatrixRain />
 
       <div style={{ position: "relative", zIndex: 1 }}>
-        {/* Terminal title bar */}
-        <header style={{ borderBottom: "1px solid var(--term-border)", backgroundColor: "var(--term-bg2)" }}>
-          <div className="max-w-4xl mx-auto px-4 py-0 flex items-stretch gap-0">
-            <div className="hidden sm:flex gap-1.5 items-center px-4 shrink-0">
-              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "var(--term-red)" }} />
-              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "var(--term-yellow)" }} />
-              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "var(--term-green)" }} />
-            </div>
-            <nav className="flex items-stretch flex-1">
-              {NAV_LINKS.map(({ to, label }) => {
-                const isActive = location.pathname === to;
-                return (
-                  <Link
-                    key={to}
-                    to={to}
-                    className={`${isActive ? "nav-active" : "nav-tab"} flex items-center text-[11px] sm:text-[12px] px-2.5 sm:px-4 py-1.5 sm:py-2`}
-                    style={{
-                      color: isActive ? "var(--term-text)" : "var(--term-dim)",
-                      backgroundColor: isActive ? "var(--term-bg)" : "transparent",
-                      borderLeft: `1px solid ${isActive ? "var(--term-border)" : "transparent"}`,
-                      borderRight: `1px solid ${isActive ? "var(--term-border)" : "transparent"}`,
-                      borderTop: `2px solid ${isActive ? "var(--term-green)" : "transparent"}`,
-                      borderBottom: `1px solid ${isActive ? "var(--term-bg)" : "transparent"}`,
-                      textDecoration: "none",
-                      transition: "all 0.15s",
-                      marginBottom: isActive ? "-1px" : "0",
-                    }}
-                  >
-                    {label}
-                  </Link>
-                );
-              })}
-            </nav>
-            <div className="hidden sm:flex items-center px-4 shrink-0" style={{ fontSize: "11px", color: "var(--term-dim)" }}>
-              spectual@github.io
-            </div>
-          </div>
-        </header>
+        <TerminalHeader />
 
         <div className="px-4 py-6">
           <div className="max-w-4xl mx-auto">
@@ -111,14 +67,6 @@ const Projects = () => {
                           transition: "border-color 0.15s, background-color 0.15s",
                           cursor: "default",
                         }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.borderColor = "var(--term-green)";
-                          e.currentTarget.style.backgroundColor = "rgba(63,185,80,0.03)";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.borderColor = "var(--term-border)";
-                          e.currentTarget.style.backgroundColor = "var(--term-bg)";
-                        }}
                       >
                         {/* Project name row */}
                         <div
@@ -154,6 +102,7 @@ const Projects = () => {
                                 href={project.githubUrl as string}
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                className="project-link-github"
                                 style={{
                                   fontSize: "11px",
                                   color: "var(--term-dim)",
@@ -161,14 +110,6 @@ const Projects = () => {
                                   border: "1px solid var(--term-border)",
                                   padding: "1px 6px",
                                   transition: "all 0.15s",
-                                }}
-                                onMouseEnter={(e) => {
-                                  e.currentTarget.style.color = "var(--term-blue)";
-                                  e.currentTarget.style.borderColor = "var(--term-blue)";
-                                }}
-                                onMouseLeave={(e) => {
-                                  e.currentTarget.style.color = "var(--term-dim)";
-                                  e.currentTarget.style.borderColor = "var(--term-border)";
                                 }}
                               >
                                 [github]
@@ -179,6 +120,7 @@ const Projects = () => {
                                 href={project.liveUrl as string}
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                className="project-link-live"
                                 style={{
                                   fontSize: "11px",
                                   color: "var(--term-dim)",
@@ -186,14 +128,6 @@ const Projects = () => {
                                   border: "1px solid var(--term-border)",
                                   padding: "1px 6px",
                                   transition: "all 0.15s",
-                                }}
-                                onMouseEnter={(e) => {
-                                  e.currentTarget.style.color = "var(--term-green)";
-                                  e.currentTarget.style.borderColor = "var(--term-green)";
-                                }}
-                                onMouseLeave={(e) => {
-                                  e.currentTarget.style.color = "var(--term-dim)";
-                                  e.currentTarget.style.borderColor = "var(--term-border)";
                                 }}
                               >
                                 [live]
@@ -255,7 +189,7 @@ const Projects = () => {
                     href={personalInfo.social.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="slide-underline"
+                    className="slide-underline github-profile-link"
                     style={{
                       color: "var(--term-blue)",
                       textDecoration: "none",
@@ -263,14 +197,6 @@ const Projects = () => {
                       padding: "4px 12px",
                       display: "inline-block",
                       transition: "all 0.15s",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = "var(--term-blue)";
-                      e.currentTarget.style.backgroundColor = "rgba(88, 166, 255, 0.08)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = "var(--term-border)";
-                      e.currentTarget.style.backgroundColor = "transparent";
                     }}
                   >
                     [→ github.com/spectual]
