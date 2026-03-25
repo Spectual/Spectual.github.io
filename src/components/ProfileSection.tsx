@@ -117,7 +117,7 @@ const AutoTypeCLI = () => {
         borderTop: "1px solid var(--term-border)",
       }}
     >
-      <div style={{ display: "flex", alignItems: "flex-start", gap: "6px", flexWrap: "wrap", minHeight: "2.6em" }}>
+      <div style={{ display: "flex", alignItems: "flex-start", gap: "6px", flexWrap: "wrap", height: "3.6em", overflow: "hidden" }}>
         <span style={{ color: "var(--term-green)" }}>spectual</span>
         <span style={{ color: "var(--term-dim)" }}>@</span>
         <span style={{ color: "var(--term-blue)" }}>github.io</span>
