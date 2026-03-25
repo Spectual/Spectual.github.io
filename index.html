@@ -51,6 +51,18 @@
       "knowsAbout": ["Machine Learning", "Computer Vision", "LLM", "RAG", "PyTorch", "Python"]
     }
     </script>
+    <!-- GitHub Pages SPA: restore path from redirect query params set by 404.html -->
+    <script>
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var p = params.get("p");
+        if (p !== null) {
+          var q = params.get("q");
+          var url = "/" + decodeURIComponent(p) + (q ? "?" + decodeURIComponent(q) : "") + window.location.hash;
+          window.history.replaceState(null, "", url);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

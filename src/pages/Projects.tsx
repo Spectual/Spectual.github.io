@@ -1,9 +1,19 @@
+import { useState } from "react";
 import { personalInfo } from "@/data/personalInfo";
 import MatrixRain from "@/components/MatrixRain";
 import TerminalFooter from "@/components/TerminalFooter";
 import TerminalHeader from "@/components/TerminalHeader";
 
+const ALL_TECHS = [
+  ...new Set(personalInfo.projects.flatMap((p) => p.technologies)),
+];
+
 const Projects = () => {
+  const [activeTech, setActiveTech] = useState<string | null>(null);
+
+  const filteredProjects = activeTech
+    ? personalInfo.projects.filter((p) => p.technologies.includes(activeTech))
+    : personalInfo.projects;
 
   return (
     <div
@@ -36,22 +46,63 @@ const Projects = () => {
 
               <div style={{ padding: "20px 24px" }}>
                 {/* Command header */}
-                <div style={{ marginBottom: "20px", fontSize: "13px" }}>
+                <div style={{ marginBottom: "16px", fontSize: "13px" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "4px" }}>
                     <span style={{ color: "var(--term-green)" }}>spectual</span>
                     <span style={{ color: "var(--term-dim)" }}>@</span>
                     <span style={{ color: "var(--term-blue)" }}>github.io</span>
                     <span style={{ color: "var(--term-text)" }}>:~$</span>
-                    <span style={{ color: "var(--term-text)", marginLeft: "4px" }}>ls -la ~/projects</span>
+                    <span style={{ color: "var(--term-text)", marginLeft: "4px" }}>
+                      {activeTech
+                        ? `grep -i "${activeTech}" projects/`
+                        : "ls -la ~/projects"}
+                    </span>
                   </div>
                   <div style={{ color: "var(--term-dim)", fontSize: "11px" }}>
-                    total {personalInfo.projects.length} entries
+                    {filteredProjects.length === personalInfo.projects.length
+                      ? `total ${personalInfo.projects.length} entries`
+                      : `${filteredProjects.length} match${filteredProjects.length !== 1 ? "es" : ""} (${personalInfo.projects.length} total)`}
+                  </div>
+                </div>
+
+                {/* Tech stack filter */}
+                <div
+                  style={{
+                    marginBottom: "20px",
+                    padding: "10px 12px",
+                    border: "1px solid var(--term-border)",
+                    backgroundColor: "var(--term-bg2)",
+                    fontSize: "11px",
+                  }}
+                >
+                  <div style={{ color: "var(--term-dim)", marginBottom: "8px" }}>
+                    # filter by tech — click to toggle
+                  </div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
+                    {ALL_TECHS.map((tech) => (
+                      <button
+                        key={tech}
+                        onClick={() => setActiveTech(activeTech === tech ? null : tech)}
+                        style={{
+                          border: `1px solid ${activeTech === tech ? "var(--term-green)" : "var(--term-border)"}`,
+                          backgroundColor: activeTech === tech ? "rgba(57,255,20,0.08)" : "transparent",
+                          color: activeTech === tech ? "var(--term-green)" : "var(--term-dim)",
+                          fontSize: "10px",
+                          padding: "2px 8px",
+                          cursor: "pointer",
+                          fontFamily: "inherit",
+                          transition: "all 0.15s",
+                        }}
+                      >
+                        {tech}
+                      </button>
+                    ))}
                   </div>
                 </div>
 
                 {/* Projects grid */}
                 <div className="grid gap-4 lg:grid-cols-2">
-                  {personalInfo.projects.map((project, index) => {
+                  {filteredProjects.map((project, index) => {
                     const isPatent = project.name.includes("Patent");
                     const hasGithub = "githubUrl" in project && project.githubUrl;
                     const hasLive = "liveUrl" in project && project.liveUrl;
@@ -156,8 +207,8 @@ const Projects = () => {
                             <span
                               key={tech}
                               style={{
-                                border: "1px solid var(--term-border)",
-                                color: "var(--term-dim)",
+                                border: `1px solid ${activeTech === tech ? "var(--term-green)" : "var(--term-border)"}`,
+                                color: activeTech === tech ? "var(--term-green)" : "var(--term-dim)",
                                 fontSize: "10px",
                                 padding: "1px 6px",
                                 fontFamily: "inherit",

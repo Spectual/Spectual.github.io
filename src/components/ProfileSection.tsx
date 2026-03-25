@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, memo } from "react";
 import { personalInfo } from "@/data/personalInfo";
 import { useTypewriter } from "@/hooks/useTypewriter";
 
@@ -142,6 +142,86 @@ const AutoTypeCLI = () => {
     </div>
   );
 };
+
+// ── GitHub Activity Feed ───────────────────────────────────────────────────
+interface GitHubPushEvent {
+  type: string;
+  repo: { name: string };
+  created_at: string;
+  payload: {
+    commits?: { message: string; sha: string }[];
+    ref?: string;
+  };
+}
+
+const GitHubActivity = memo(() => {
+  const [events, setEvents] = useState<GitHubPushEvent[]>([]);
+  const [status, setStatus] = useState<"loading" | "ok" | "error">("loading");
+
+  useEffect(() => {
+    fetch("https://api.github.com/users/Spectual/events?per_page=30")
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((data: unknown[]) => {
+        const pushes = (data as GitHubPushEvent[])
+          .filter((e) => e.type === "PushEvent" && e.payload.commits?.length)
+          .slice(0, 4);
+        setEvents(pushes);
+        setStatus("ok");
+      })
+      .catch(() => setStatus("error"));
+  }, []);
+
+  if (status === "error" || (status === "ok" && events.length === 0)) return null;
+
+  return (
+    <div
+      style={{
+        marginTop: "16px",
+        paddingTop: "14px",
+        borderTop: "1px solid var(--term-border)",
+        fontSize: "12px",
+      }}
+    >
+      <div style={{ color: "var(--term-dim)", marginBottom: "8px", fontSize: "11px" }}>
+        # recent github activity
+      </div>
+
+      {status === "loading" ? (
+        <div style={{ color: "var(--term-dim)", fontSize: "11px" }}>
+          <span style={{ color: "var(--term-green)" }}>$</span> git log --oneline
+          <span className="cursor-blink" style={{ marginLeft: "4px" }} />
+        </div>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+          {events.map((ev, i) => {
+            const repo = ev.repo.name.replace("spectual/", "");
+            const branch = ev.payload.ref?.replace("refs/heads/", "") ?? "main";
+            const commit = ev.payload.commits?.[0];
+            const msg = commit?.message.split("\n")[0].slice(0, 60) ?? "";
+            const sha = commit?.sha.slice(0, 7) ?? "";
+            const date = new Date(ev.created_at).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+            });
+            return (
+              <div key={i} style={{ display: "flex", gap: "6px", alignItems: "flex-start", flexWrap: "wrap" }}>
+                <span style={{ color: "var(--term-dim)", fontSize: "10px", flexShrink: 0, marginTop: "1px" }}>
+                  {date}
+                </span>
+                <span style={{ color: "var(--term-green)", flexShrink: 0 }}>push</span>
+                <span style={{ color: "var(--term-blue)", flexShrink: 0 }}>{repo}</span>
+                <span style={{ color: "var(--term-dim)", flexShrink: 0 }}>({branch})</span>
+                <span style={{ color: "var(--term-yellow)", fontSize: "10px", flexShrink: 0 }}>[{sha}]</span>
+                <span style={{ color: "var(--term-text)", fontSize: "11px", wordBreak: "break-word" }}>{msg}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+});
+GitHubActivity.displayName = "GitHubActivity";
 
 // ── ProfileSection ─────────────────────────────────────────────────────────
 const ProfileSection = () => {
@@ -419,6 +499,9 @@ const ProfileSection = () => {
 
                 {/* Auto-type CLI */}
                 <AutoTypeCLI />
+
+                {/* GitHub activity feed */}
+                <GitHubActivity />
               </div>
             </div>
           </div>

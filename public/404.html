@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Yifei Bao · AI/ML Engineer</title>
+    <script>
+      // GitHub Pages SPA redirect:
+      // Convert /path?query#hash → /?p=path&q=query#hash
+      // so index.html can restore the original URL via history.replaceState.
+      (function () {
+        var l = window.location;
+        var path = l.pathname.slice(1); // strip leading "/"
+        var redirect =
+          l.protocol +
+          "//" +
+          l.host +
+          "/?p=" +
+          encodeURIComponent(path) +
+          (l.search ? "&q=" + encodeURIComponent(l.search.slice(1)) : "") +
+          l.hash;
+        l.replace(redirect);
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>
