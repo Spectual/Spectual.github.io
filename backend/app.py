@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, Response, stream_with_context
 from flask_cors import CORS
 from openai import OpenAI
 import os
@@ -242,6 +242,121 @@ INSTRUCTIONS:
             'error': 'Failed to get AI response',
             'success': False
         }), 500
+
+@app.route('/api/chat/stream', methods=['POST'])
+def chat_stream():
+    """Streaming chat endpoint using SSE"""
+    try:
+        data = request.get_json()
+        message = data.get('message', '')
+
+        if not message:
+            return jsonify({'error': 'Message is required'}), 400
+
+        user_id = get_user_id()
+        log_message(user_id, message, is_user=True)
+
+        if not api_key:
+            return jsonify({'error': 'OpenAI API key not configured', 'success': False}), 500
+
+        if not rag_system:
+            return jsonify({'error': 'RAG system not initialized', 'success': False}), 500
+
+        personal_info = rag_system.get_personal_info()
+        profile_summary = rag_system.get_summary_document()
+
+        # Refine query (non-streaming step)
+        query_refiner_prompt = f"""
+You are a world-class AI research assistant. Your task is to refine a user's question into a highly effective search query for a vector database.
+The user is asking about a person named {personal_info['name']}.
+Here is a high-level summary of their profile:
+---
+{profile_summary}
+---
+Based on this summary and the user's original question, generate a concise and focused search query.
+Do not answer the user's question, only generate the search query.
+
+User's Original Question: "{message}"
+Refined Search Query:
+"""
+        try:
+            query_refiner_response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[{"role": "system", "content": query_refiner_prompt}],
+                temperature=0,
+                max_tokens=100,
+            )
+            refined_query = query_refiner_response.choices[0].message.content.strip()
+        except Exception:
+            refined_query = message
+
+        try:
+            relevant_context = rag_system.search_relevant_context(refined_query, k=4)
+        except Exception:
+            relevant_context = "Unable to retrieve relevant information from the knowledge base."
+
+        final_answer_prompt = f"""You are a helpful and professional AI assistant representing {personal_info['name']}.
+Your goal is to provide a comprehensive and accurate answer based on the provided information.
+
+First, here is a high-level summary of {personal_info['name']}'s profile for your general understanding:
+<SUMMARY>
+{profile_summary}
+</SUMMARY>
+
+Now, here is the user's question and the specific, detailed information retrieved from the knowledge base to help you answer it:
+<USER_QUESTION>
+{message}
+</USER_QUESTION>
+
+<DETAILED_CONTEXT>
+{relevant_context}
+</DETAILED_CONTEXT>
+
+INSTRUCTIONS:
+- Synthesize the information from both the SUMMARY and the DETAILED_CONTEXT to formulate your final answer.
+- Answer the user's question directly and accurately based *only* on the information provided.
+- If the detailed context does not contain the answer, you can rely on the summary. If neither contains the answer, state that you don't have enough information.
+- Always respond in the same language as the user's question and respond as if you are {personal_info['name']}.
+"""
+
+        # Capture user_id in closure before streaming
+        captured_user_id = user_id
+        captured_message = message
+
+        def generate():
+            full_response = []
+            try:
+                stream = client.chat.completions.create(
+                    model="gpt-4o-mini",
+                    messages=[{"role": "system", "content": final_answer_prompt}],
+                    temperature=0.5,
+                    max_tokens=1000,
+                    stream=True,
+                )
+                for chunk in stream:
+                    content = chunk.choices[0].delta.content
+                    if content:
+                        full_response.append(content)
+                        yield f"data: {json.dumps({'content': content})}\n\n"
+
+                log_message(captured_user_id, captured_message, is_user=False, response="".join(full_response))
+                yield f"data: {json.dumps({'done': True})}\n\n"
+
+            except Exception as e:
+                yield f"data: {json.dumps({'error': str(e)})}\n\n"
+
+        return Response(
+            stream_with_context(generate()),
+            mimetype='text/event-stream',
+            headers={
+                'Cache-Control': 'no-cache',
+                'X-Accel-Buffering': 'no',
+            },
+        )
+
+    except Exception as e:
+        return jsonify({'error': str(e), 'success': False}), 500
+
 
 @app.route('/api/health', methods=['GET'])
 def health_check():
