@@ -13,6 +13,7 @@ const TerminalHeader = ({ title }: TerminalHeaderProps) => {
     { to: "/", label: t.nav.chat },
     { to: "/resume", label: t.nav.resume },
     { to: "/projects", label: t.nav.projects },
+    { to: "/demo", label: t.nav.demo },
   ];
 
   return (

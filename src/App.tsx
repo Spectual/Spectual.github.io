@@ -10,6 +10,7 @@ import { LanguageProvider } from "./i18n/LanguageContext";
 
 const Resume = lazy(() => import("./pages/Resume"));
 const Projects = lazy(() => import("./pages/Projects"));
+const MLDemo = lazy(() => import("./pages/MLDemo"));
 
 class ErrorBoundary extends Component<
   { children: ReactNode },
@@ -67,6 +68,7 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route path="/resume" element={<Resume />} />
                 <Route path="/projects" element={<Projects />} />
+                <Route path="/demo" element={<MLDemo />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
