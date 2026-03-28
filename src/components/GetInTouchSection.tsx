@@ -1,26 +1,28 @@
 import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { personalInfo } from "@/data/personalInfo";
+import { useLang } from "@/i18n/LanguageContext";
 
 const GetInTouchSection = () => {
+  const { t } = useLang();
   const [form, setForm] = useState({ name: "", company: "", email: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
 
   const validate = () => {
     if (!form.name.trim()) {
-      toast({ title: "error: name is required" });
+      toast({ title: t.contact.errName });
       return false;
     }
     if (!form.email.trim()) {
-      toast({ title: "error: email is required" });
+      toast({ title: t.contact.errEmail });
       return false;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      toast({ title: "error: invalid email format" });
+      toast({ title: t.contact.errEmailFmt });
       return false;
     }
     if (!form.message.trim()) {
-      toast({ title: "error: message is required" });
+      toast({ title: t.contact.errMessage });
       return false;
     }
     return true;
@@ -82,7 +84,7 @@ const GetInTouchSection = () => {
               color: "var(--term-dim)",
             }}
           >
-            bash — ~/contact
+            {t.contact.titleBar}
           </div>
 
           <div style={{ padding: "20px 24px" }}>
@@ -97,7 +99,7 @@ const GetInTouchSection = () => {
                   contact --send-message
                 </span>
               </div>
-              <div style={{ color: "var(--term-dim)", fontSize: "11px", marginTop: "6px", marginLeft: "0" }}>
+              <div style={{ color: "var(--term-dim)", fontSize: "11px", marginTop: "6px" }}>
                 # opens default email client with form pre-filled
               </div>
             </div>
@@ -112,11 +114,11 @@ const GetInTouchSection = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
                   <div>
                     <label htmlFor="contact-name" style={labelStyle}>
-                      name <span style={{ color: "var(--term-red)" }}>*</span>
+                      {t.contact.nameLabel} <span style={{ color: "var(--term-red)" }}>*</span>
                     </label>
                     <input
                       id="contact-name"
-                      placeholder="your name"
+                      placeholder={t.contact.namePlaceholder}
                       value={form.name}
                       onChange={(e) => setForm({ ...form, name: e.target.value })}
                       style={inputStyle}
@@ -126,12 +128,12 @@ const GetInTouchSection = () => {
                   </div>
                   <div>
                     <label htmlFor="contact-company" style={labelStyle}>
-                      company{" "}
-                      <span style={{ color: "var(--term-dim)", fontSize: "10px" }}>(optional)</span>
+                      {t.contact.companyLabel}{" "}
+                      <span style={{ color: "var(--term-dim)", fontSize: "10px" }}>{t.contact.optional}</span>
                     </label>
                     <input
                       id="contact-company"
-                      placeholder="company name"
+                      placeholder={t.contact.companyPlaceholder}
                       value={form.company}
                       onChange={(e) => setForm({ ...form, company: e.target.value })}
                       style={inputStyle}
@@ -143,12 +145,12 @@ const GetInTouchSection = () => {
 
                 <div style={{ marginBottom: "12px" }}>
                   <label htmlFor="contact-email" style={labelStyle}>
-                    email <span style={{ color: "var(--term-red)" }}>*</span>
+                    {t.contact.emailLabel} <span style={{ color: "var(--term-red)" }}>*</span>
                   </label>
                   <input
                     id="contact-email"
                     type="email"
-                    placeholder="you@example.com"
+                    placeholder={t.contact.emailPlaceholder}
                     value={form.email}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
                     style={inputStyle}
@@ -159,11 +161,11 @@ const GetInTouchSection = () => {
 
                 <div style={{ marginBottom: "16px" }}>
                   <label htmlFor="contact-message" style={labelStyle}>
-                    message <span style={{ color: "var(--term-red)" }}>*</span>
+                    {t.contact.messageLabel} <span style={{ color: "var(--term-red)" }}>*</span>
                   </label>
                   <textarea
                     id="contact-message"
-                    placeholder="your message..."
+                    placeholder={t.contact.messagePlaceholder}
                     rows={5}
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
@@ -198,7 +200,7 @@ const GetInTouchSection = () => {
                     e.currentTarget.style.color = "var(--term-green)";
                   }}
                 >
-                  {submitting ? "opening email client..." : "[send-message]"}
+                  {submitting ? t.contact.sending : t.contact.sendBtn}
                 </button>
               </form>
 
@@ -206,10 +208,10 @@ const GetInTouchSection = () => {
               <div>
                 <div style={{ marginBottom: "16px" }}>
                   <div style={{ color: "var(--term-green)", fontWeight: 600, marginBottom: "4px", fontSize: "14px" }}>
-                    let's connect
+                    {t.contact.connectTitle}
                   </div>
                   <div style={{ color: "var(--term-dim)", fontSize: "12px", lineHeight: "1.6" }}>
-                    Happy to connect about opportunities, collaboration, or any interesting ideas.
+                    {t.contact.connectDesc}
                   </div>
                 </div>
 

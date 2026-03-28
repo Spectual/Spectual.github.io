@@ -4,15 +4,7 @@ import MessageBubble from "./MessageBubble";
 import { sendMessageStream, checkHealth } from "@/utils/api";
 import { toast } from "sonner";
 import type { Message } from "@/types/chat";
-
-const PREDEFINED_QUESTIONS = [
-  "What is your background?",
-  "Tell me about your projects",
-  "What are your technical skills?",
-  "Where did you study?",
-  "What's your work experience?",
-  "Any patents or publications?",
-];
+import { useLang } from "@/i18n/LanguageContext";
 
 // ── Neural network thinking indicator ─────────────────────────────────────
 const NN_FRAMES = [
@@ -53,11 +45,14 @@ const ThinkingIndicator = () => {
 };
 
 // ── ChatSection ────────────────────────────────────────────────────────────
+const INITIAL_MSG_ID = "1";
+
 const ChatSection = () => {
+  const { t, lang } = useLang();
   const [messages, setMessages] = useState<Message[]>([
     {
-      id: "1",
-      text: "Hi! I'm representing Yifei. Ask me anything about my background, skills, projects, or experience!",
+      id: INITIAL_MSG_ID,
+      text: t.chat.greeting,
       isUser: false,
       timestamp: new Date(),
     },
@@ -73,6 +68,16 @@ const ChatSection = () => {
   const historyRef = useRef<string[]>([]);
   const historyIndexRef = useRef(-1);
   const pendingInputRef = useRef("");
+
+  // Update greeting when language changes (if no user messages yet)
+  useEffect(() => {
+    setMessages((prev) => {
+      const hasUserMsg = prev.some((m) => m.isUser);
+      if (hasUserMsg) return prev;
+      return [{ id: INITIAL_MSG_ID, text: t.chat.greeting, isUser: false, timestamp: prev[0].timestamp }];
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang]);
 
   const isNearBottom = (): boolean => {
     const el = scrollContainerRef.current;
@@ -99,26 +104,27 @@ const ChatSection = () => {
       const isOnline = await checkHealth();
       setIsServerOnline(isOnline);
       if (!isOnline) {
-        toast.error("AI server is currently offline. Please try again later.");
+        toast.error(t.chat.offlineToast);
       }
     };
     checkServerStatus();
     const interval = setInterval(checkServerStatus, 30000);
     return () => clearInterval(interval);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleExport = () => {
     if (messages.length <= 1) {
-      toast.info("Nothing to export yet — start a conversation first!");
+      toast.info(t.chat.exportNothing);
       return;
     }
     const lines = messages.map((m) => {
       const time = m.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
       return m.isUser
-        ? `**[${time}] You:** ${m.text}`
-        : `**[${time}] AI:** ${m.text}`;
+        ? `**[${time}] ${t.chat.youLabel}:** ${m.text}`
+        : `**[${time}] ${t.chat.aiLabel}:** ${m.text}`;
     });
-    const content = `# Chat Export\n\n_Exported on ${new Date().toLocaleString()}_\n\n---\n\n${lines.join("\n\n---\n\n")}`;
+    const content = `${t.chat.exportHeader}\n\n_${t.chat.exportedOn} ${new Date().toLocaleString()}_\n\n---\n\n${lines.join("\n\n---\n\n")}`;
     const blob = new Blob([content], { type: "text/markdown" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -131,7 +137,7 @@ const ChatSection = () => {
   const handleSendMessage = async (messageText: string) => {
     if (!messageText.trim()) return;
     if (!isServerOnline) {
-      toast.error("AI server is currently offline. Please try again later.");
+      toast.error(t.chat.offlineToast);
       return;
     }
 
@@ -183,15 +189,15 @@ const ChatSection = () => {
         console.error("Stream error:", error);
         setIsLoading(false);
         setStreamingMessageId(null);
-        toast.error("Failed to get response. Please try again later.");
+        toast.error(t.chat.streamError);
         setMessages((prev) => {
           const hasAiMessage = prev.some((m) => m.id === aiId);
-          if (hasAiMessage) return prev; // partial response already shown, keep it
+          if (hasAiMessage) return prev;
           return [
             ...prev,
             {
               id: aiId,
-              text: "Sorry, I'm having trouble connecting right now. Please try again later.",
+              text: t.chat.fallbackError,
               isUser: false,
               timestamp: new Date(),
             },
@@ -233,7 +239,7 @@ const ChatSection = () => {
     <section className="px-4 pb-6" style={{ position: "relative", zIndex: 1 }}>
       <div className="max-w-4xl mx-auto">
         <div style={{ border: "1px solid var(--term-border)", backgroundColor: "var(--term-bg)" }}>
-          {/* Terminal title bar — enhanced AI style */}
+          {/* Terminal title bar */}
           <div
             style={{
               borderBottom: "1px solid var(--term-border)",
@@ -248,16 +254,16 @@ const ChatSection = () => {
           >
             <span style={{ color: "var(--term-dim)", fontSize: "12px" }}>
               🧠{" "}
-              <span style={{ color: "var(--term-text)" }}>AI Assistant v2.0</span>
+              <span style={{ color: "var(--term-text)" }}>{t.chat.titleBar}</span>
               <span style={{ color: "var(--term-dim)" }}>
-                {" "}| model:{" "}
+                {" "}| {t.chat.modelLabel}:{" "}
               </span>
               <span style={{ color: "var(--term-cyan)" }}>rag-powered</span>
               <span style={{ color: "var(--term-dim)" }}>
-                {" "}| status:{" "}
+                {" "}| {t.chat.statusLabel}:{" "}
               </span>
               <span style={{ color: isServerOnline ? "var(--term-green)" : "var(--term-red)" }}>
-                {isServerOnline ? "online" : "offline"}
+                {isServerOnline ? t.chat.statusOnline : t.chat.statusOffline}
               </span>
             </span>
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -281,12 +287,12 @@ const ChatSection = () => {
                     animation: isServerOnline ? "neuralPulse 2s ease-in-out infinite" : "none",
                   }}
                 />
-                {isServerOnline ? "server:online" : "server:offline"}
+                {isServerOnline ? t.chat.serverOnline : t.chat.serverOffline}
               </span>
               {/* Export button */}
               <button
                 onClick={handleExport}
-                title="Export chat as Markdown"
+                title={t.chat.exportTooltip}
                 style={{
                   background: "transparent",
                   border: "1px solid var(--term-border)",
@@ -303,7 +309,7 @@ const ChatSection = () => {
                 className="chat-quick-btn"
               >
                 <Download size={11} />
-                export
+                {t.chat.exportBtn}
               </button>
             </div>
           </div>
@@ -336,7 +342,7 @@ const ChatSection = () => {
               }}
             >
               <AlertCircle size={13} />
-              error: AI server is offline. Responses unavailable.
+              {t.chat.offlineError}
             </div>
           )}
 
@@ -377,10 +383,10 @@ const ChatSection = () => {
             {/* Predefined questions */}
             <div style={{ marginBottom: "10px" }}>
               <div style={{ fontSize: "11px", color: "var(--term-dim)", marginBottom: "6px" }}>
-                # quick commands:
+                {t.chat.quickCommands}
               </div>
               <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-1.5">
-                {PREDEFINED_QUESTIONS.map((question, index) => (
+                {t.chat.questions.map((question, index) => (
                   <button
                     key={index}
                     onClick={() => handleSendMessage(question)}
@@ -422,7 +428,7 @@ const ChatSection = () => {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyPress}
-                placeholder="type your question..."
+                placeholder={t.chat.placeholder}
                 disabled={isLoading || !isServerOnline}
                 style={{
                   flex: 1,
@@ -455,7 +461,7 @@ const ChatSection = () => {
                   flexShrink: 0,
                 }}
               >
-                [enter]
+                {t.chat.enterBtn}
               </button>
             </div>
           </div>

@@ -1,6 +1,9 @@
+import { useLang } from "@/i18n/LanguageContext";
+
 const TerminalFooter = () => {
+  const { t, lang } = useLang();
   const now = new Date();
-  const loginStr = now.toLocaleDateString("en-US", {
+  const loginStr = now.toLocaleDateString(lang === "zh" ? "zh-CN" : "en-US", {
     weekday: "short",
     month: "short",
     day: "numeric",
@@ -34,14 +37,14 @@ const TerminalFooter = () => {
             <span style={{ color: "var(--term-dim)" }}>@</span>
             <span style={{ color: "var(--term-blue)" }}>github.io</span>
             <span style={{ color: "var(--term-dim)" }}>
-              {" "}| Built with React + TypeScript +{" "}
+              {" "}| {t.footer.builtWith}{" "}
             </span>
             <span style={{ color: "var(--term-red)" }}>❤</span>
           </span>
           <span style={{ color: "var(--term-dim)" }}>
-            Last login:{" "}
+            {t.footer.lastLogin}{" "}
             <span style={{ color: "var(--term-text)" }}>{loginStr}</span>
-            {" "}from visitor.ip
+            {" "}{t.footer.fromIp}
           </span>
         </div>
       </div>
