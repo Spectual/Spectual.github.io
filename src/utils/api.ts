@@ -7,14 +7,19 @@ export interface ChatResponse {
   error?: string;
 }
 
-export async function sendMessage(message: string): Promise<ChatResponse> {
+export interface ConversationMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
+export async function sendMessage(message: string, history: ConversationMessage[] = []): Promise<ChatResponse> {
   try {
     const response = await fetch(`${API_BASE_URL}/api/chat`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ message, history }),
     });
 
     if (!response.ok) {
@@ -35,6 +40,7 @@ export async function sendMessage(message: string): Promise<ChatResponse> {
 
 export async function sendMessageStream(
   message: string,
+  history: ConversationMessage[],
   onChunk: (chunk: string) => void,
   onDone: () => void,
   onError: (error: string) => void
@@ -43,7 +49,7 @@ export async function sendMessageStream(
     const response = await fetch(`${API_BASE_URL}/api/chat/stream`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ message, history }),
     });
 
     if (!response.ok) {

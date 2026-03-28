@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { AlertCircle, Download } from "lucide-react";
 import MessageBubble from "./MessageBubble";
-import { sendMessageStream, checkHealth } from "@/utils/api";
+import { sendMessageStream, checkHealth, type ConversationMessage } from "@/utils/api";
 import { toast } from "sonner";
 import type { Message } from "@/types/chat";
 import { useLang } from "@/i18n/LanguageContext";
@@ -152,6 +152,15 @@ const ChatSection = () => {
       timestamp: new Date(),
     };
 
+    // Build conversation history for the backend (exclude initial greeting, cap at 20 messages)
+    const history: ConversationMessage[] = messages
+      .filter((m) => m.id !== INITIAL_MSG_ID)
+      .slice(-20)
+      .map((m) => ({
+        role: m.isUser ? 'user' : 'assistant',
+        content: m.text,
+      }));
+
     setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
     setIsLoading(true);
@@ -161,6 +170,7 @@ const ChatSection = () => {
 
     await sendMessageStream(
       messageText,
+      history,
       // onChunk: first chunk creates the message, subsequent ones append
       (chunk) => {
         setIsLoading(false);

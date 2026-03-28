@@ -114,6 +114,7 @@ def chat():
     try:
         data = request.get_json()
         message = data.get('message', '')
+        history = data.get('history', [])[-20:]  # cap at 20 messages
         
         if not message:
             return jsonify({'error': 'Message is required'}), 400
@@ -211,12 +212,18 @@ INSTRUCTIONS:
 - Always respond in the same language as the user's question and respond as if you are {personal_info['name']}.
 """
 
+        # Build messages with conversation history
+        openai_messages = [{"role": "system", "content": final_answer_prompt}]
+        for h in history:
+            role = h.get('role', 'user')
+            if role in ('user', 'assistant'):
+                openai_messages.append({"role": role, "content": h.get('content', '')})
+        openai_messages.append({"role": "user", "content": message})
+
         # Call OpenAI API for the final answer
         final_response = client.chat.completions.create(
             model="gpt-4o-mini",
-            messages=[
-                {"role": "system", "content": final_answer_prompt}
-            ],
+            messages=openai_messages,
             temperature=0.5,
             max_tokens=1000,
         )
@@ -249,6 +256,7 @@ def chat_stream():
     try:
         data = request.get_json()
         message = data.get('message', '')
+        history = data.get('history', [])[-20:]  # cap at 20 messages
 
         if not message:
             return jsonify({'error': 'Message is required'}), 400
@@ -319,16 +327,25 @@ INSTRUCTIONS:
 - Always respond in the same language as the user's question and respond as if you are {personal_info['name']}.
 """
 
-        # Capture user_id in closure before streaming
+        # Build messages with conversation history
+        stream_messages = [{"role": "system", "content": final_answer_prompt}]
+        for h in history:
+            role = h.get('role', 'user')
+            if role in ('user', 'assistant'):
+                stream_messages.append({"role": role, "content": h.get('content', '')})
+        stream_messages.append({"role": "user", "content": message})
+
+        # Capture variables in closure before streaming
         captured_user_id = user_id
         captured_message = message
+        captured_stream_messages = stream_messages
 
         def generate():
             full_response = []
             try:
                 stream = client.chat.completions.create(
                     model="gpt-4o-mini",
-                    messages=[{"role": "system", "content": final_answer_prompt}],
+                    messages=captured_stream_messages,
                     temperature=0.5,
                     max_tokens=1000,
                     stream=True,
