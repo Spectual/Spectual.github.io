@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, memo } from "react";
 import { personalInfo } from "@/data/personalInfo";
 import { useTypewriter } from "@/hooks/useTypewriter";
+import { useLang } from "@/i18n/LanguageContext";
 
 // ── Skill progress bars ────────────────────────────────────────────────────
 const SKILL_LEVELS = [
@@ -154,7 +155,7 @@ interface GitHubPushEvent {
   };
 }
 
-const GitHubActivity = memo(() => {
+const GitHubActivity = memo(({ activityLabel }: { activityLabel: string }) => {
   const [events, setEvents] = useState<GitHubPushEvent[]>([]);
   const [status, setStatus] = useState<"loading" | "ok" | "error">("loading");
 
@@ -183,7 +184,7 @@ const GitHubActivity = memo(() => {
       }}
     >
       <div style={{ color: "var(--term-dim)", marginBottom: "8px", fontSize: "11px" }}>
-        # recent github activity
+        {activityLabel}
       </div>
 
       {status === "loading" ? (
@@ -225,6 +226,7 @@ GitHubActivity.displayName = "GitHubActivity";
 
 // ── ProfileSection ─────────────────────────────────────────────────────────
 const ProfileSection = () => {
+  const { t } = useLang();
   const skills = personalInfo.skills;
 
   // Single IntersectionObserver for all skill bars
@@ -274,7 +276,7 @@ const ProfileSection = () => {
               gap: "8px",
             }}
           >
-            <span style={{ color: "var(--term-dim)", fontSize: "12px" }}>bash — neofetch</span>
+            <span style={{ color: "var(--term-dim)", fontSize: "12px" }}>{t.profile.titleBar}</span>
           </div>
 
           {/* Content */}
@@ -337,7 +339,7 @@ const ProfileSection = () => {
                   └────────────────┘
                 </div>
                 <div style={{ marginTop: "4px", fontSize: "11px", color: "var(--term-green)" }}>
-                  ● available
+                  {t.profile.available}
                 </div>
               </div>
 
@@ -384,23 +386,23 @@ const ProfileSection = () => {
 
                 {/* Key-value info */}
                 {[
-                  { key: "role", value: personalInfo.title, color: "var(--term-blue)" },
-                  { key: "location", value: personalInfo.location, color: "var(--term-blue)" },
+                  { key: t.profile.role, value: personalInfo.title, color: "var(--term-blue)" },
+                  { key: t.profile.location, value: personalInfo.location, color: "var(--term-blue)" },
                   {
-                    key: "email",
+                    key: t.profile.email,
                     value: personalInfo.email,
                     color: "var(--term-blue)",
                     href: `mailto:${personalInfo.email}`,
                   },
                   {
-                    key: "github",
+                    key: t.profile.github,
                     value: "github.com/spectual",
                     color: "var(--term-blue)",
                     href: personalInfo.social.github,
                     external: true,
                   },
                   {
-                    key: "linkedin",
+                    key: t.profile.linkedin,
                     value: "linkedin.com/in/yifei-bao-mscs",
                     color: "var(--term-blue)",
                     href: personalInfo.social.linkedin,
@@ -434,7 +436,7 @@ const ProfileSection = () => {
 
                 {/* Skills text — wraps on mobile */}
                 <div style={{ marginBottom: "4px", lineHeight: "1.6" }}>
-                  <span style={{ color: "var(--term-blue)" }}>skills</span>
+                  <span style={{ color: "var(--term-blue)" }}>{t.profile.skills}</span>
                   <span style={{ color: "var(--term-dim)" }}>: </span>
                   <span
                     style={{
@@ -481,7 +483,7 @@ const ProfileSection = () => {
                 {/* Skills progress bars */}
                 <div ref={skillsContainerRef} style={{ marginBottom: "12px" }}>
                   <div style={{ fontSize: "11px", color: "var(--term-dim)", marginBottom: "8px" }}>
-                    # proficiency
+                    {t.profile.proficiencyLabel}
                   </div>
                   {SKILL_LEVELS.map((s, i) => (
                     <SkillBar key={s.name} name={s.name} level={s.level} delay={i * 120} started={skillsStarted} />
@@ -494,14 +496,14 @@ const ProfileSection = () => {
 
                 {/* Bio */}
                 <div style={{ color: "var(--term-dim)", fontSize: "12px", lineHeight: "1.7", maxWidth: "560px" }}>
-                  {personalInfo.background}
+                  {t.profile.bio}
                 </div>
 
                 {/* Auto-type CLI */}
                 <AutoTypeCLI />
 
                 {/* GitHub activity feed */}
-                <GitHubActivity />
+                <GitHubActivity activityLabel={t.profile.githubActivity} />
               </div>
             </div>
           </div>

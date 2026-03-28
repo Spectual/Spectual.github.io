@@ -1,10 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-
-const NAV_LINKS = [
-  { to: "/", label: "~/chat" },
-  { to: "/resume", label: "~/resume" },
-  { to: "/projects", label: "~/projects" },
-];
+import { useLang } from "@/i18n/LanguageContext";
 
 interface TerminalHeaderProps {
   title?: string;
@@ -12,6 +7,13 @@ interface TerminalHeaderProps {
 
 const TerminalHeader = ({ title }: TerminalHeaderProps) => {
   const location = useLocation();
+  const { t, toggleLang } = useLang();
+
+  const NAV_LINKS = [
+    { to: "/", label: t.nav.chat },
+    { to: "/resume", label: t.nav.resume },
+    { to: "/projects", label: t.nav.projects },
+  ];
 
   return (
     <header
@@ -56,12 +58,32 @@ const TerminalHeader = ({ title }: TerminalHeaderProps) => {
           })}
         </nav>
 
-        {/* Shell info — hidden on mobile */}
-        <div
-          className="hidden sm:flex items-center px-4 shrink-0"
-          style={{ fontSize: "11px", color: "var(--term-dim)" }}
-        >
-          spectual@github.io
+        {/* Right side: shell info + lang toggle */}
+        <div className="flex items-center gap-3 px-3 sm:px-4 shrink-0">
+          <span
+            className="hidden sm:block"
+            style={{ fontSize: "11px", color: "var(--term-dim)" }}
+          >
+            spectual@github.io
+          </span>
+          <button
+            onClick={toggleLang}
+            title="Switch language / 切换语言"
+            style={{
+              background: "transparent",
+              border: "1px solid var(--term-border)",
+              color: "var(--term-dim)",
+              fontFamily: "inherit",
+              fontSize: "11px",
+              padding: "1px 6px",
+              cursor: "pointer",
+              transition: "color 0.15s, border-color 0.15s",
+              lineHeight: 1.6,
+            }}
+            className="chat-quick-btn"
+          >
+            {t.langToggle}
+          </button>
         </div>
       </div>
     </header>
