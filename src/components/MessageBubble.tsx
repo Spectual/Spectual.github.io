@@ -6,6 +6,7 @@ import type { Message } from "@/types/chat";
 interface MessageBubbleProps {
   message: Message;
   isTyping?: boolean;
+  isStreaming?: boolean;
   onTypingComplete?: () => void;
 }
 
@@ -46,7 +47,7 @@ const markdownComponents = {
   ),
 };
 
-const MessageBubble = ({ message, isTyping = false, onTypingComplete }: MessageBubbleProps) => {
+const MessageBubble = ({ message, isTyping = false, isStreaming = false, onTypingComplete }: MessageBubbleProps) => {
   const time = message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   const onCompleteRef = useRef(onTypingComplete);
   onCompleteRef.current = onTypingComplete;
@@ -77,9 +78,10 @@ const MessageBubble = ({ message, isTyping = false, onTypingComplete }: MessageB
     );
   }
 
-  // Determine what text to render
-  const renderText = isTyping ? displayed : message.text;
-  const showCursor = isTyping && !done;
+  // Streaming: render message.text directly (chunks provide the animation)
+  // Typing: use typewriter effect on the full text
+  const renderText = isStreaming ? message.text : (isTyping ? displayed : message.text);
+  const showCursor = isStreaming || (isTyping && !done);
 
   return (
     <div ref={ref} style={{ marginBottom: "12px" }}>

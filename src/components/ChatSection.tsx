@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Download } from "lucide-react";
 import MessageBubble from "./MessageBubble";
-import { sendMessage, checkHealth } from "@/utils/api";
+import { sendMessageStream, checkHealth } from "@/utils/api";
 import { toast } from "sonner";
 import type { Message } from "@/types/chat";
 
@@ -65,7 +65,7 @@ const ChatSection = () => {
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isServerOnline, setIsServerOnline] = useState(true);
-  const [typingMessageId, setTypingMessageId] = useState<string | null>(null);
+  const [streamingMessageId, setStreamingMessageId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const isInitialLoad = useRef(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -107,14 +107,33 @@ const ChatSection = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const handleExport = () => {
+    if (messages.length <= 1) {
+      toast.info("Nothing to export yet — start a conversation first!");
+      return;
+    }
+    const lines = messages.map((m) => {
+      const time = m.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      return m.isUser
+        ? `**[${time}] You:** ${m.text}`
+        : `**[${time}] AI:** ${m.text}`;
+    });
+    const content = `# Chat Export\n\n_Exported on ${new Date().toLocaleString()}_\n\n---\n\n${lines.join("\n\n---\n\n")}`;
+    const blob = new Blob([content], { type: "text/markdown" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `chat-${new Date().toISOString().slice(0, 10)}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const handleSendMessage = async (messageText: string) => {
     if (!messageText.trim()) return;
     if (!isServerOnline) {
       toast.error("AI server is currently offline. Please try again later.");
       return;
     }
-    // Finish any ongoing typewriter immediately
-    setTypingMessageId(null);
 
     historyRef.current = [messageText, ...historyRef.current];
     historyIndexRef.current = -1;
@@ -132,36 +151,55 @@ const ChatSection = () => {
     setIsLoading(true);
     requestAnimationFrame(scrollChatToBottom);
 
-    try {
-      const response = await sendMessage(messageText);
-      const aiId = crypto.randomUUID();
-      const aiMessage: Message = {
-        id: aiId,
-        text: response.success
-          ? response.response
-          : response.response || "Sorry, I'm having trouble connecting right now. Please try again later.",
-        isUser: false,
-        timestamp: new Date(),
-      };
-      if (!response.success) toast.error("Failed to get response. Please try again.");
-      setMessages((prev) => [...prev, aiMessage]);
-      setTypingMessageId(aiId);
-    } catch (error) {
-      console.error("Error getting AI response:", error);
-      toast.error("Failed to get response. Please try again later.");
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: crypto.randomUUID(),
-          text: "Sorry, I'm having trouble connecting right now. Please try again later.",
-          isUser: false,
-          timestamp: new Date(),
-        },
-      ]);
-    } finally {
-      setIsLoading(false);
-      inputRef.current?.focus();
-    }
+    const aiId = crypto.randomUUID();
+
+    await sendMessageStream(
+      messageText,
+      // onChunk: first chunk creates the message, subsequent ones append
+      (chunk) => {
+        setIsLoading(false);
+        setMessages((prev) => {
+          const existing = prev.find((m) => m.id === aiId);
+          if (existing) {
+            return prev.map((m) => (m.id === aiId ? { ...m, text: m.text + chunk } : m));
+          }
+          // First chunk — add message and mark it streaming
+          setStreamingMessageId(aiId);
+          requestAnimationFrame(scrollChatToBottom);
+          return [
+            ...prev,
+            { id: aiId, text: chunk, isUser: false, timestamp: new Date() },
+          ];
+        });
+      },
+      // onDone
+      () => {
+        setIsLoading(false);
+        setStreamingMessageId(null);
+        inputRef.current?.focus();
+      },
+      // onError
+      (error) => {
+        console.error("Stream error:", error);
+        setIsLoading(false);
+        setStreamingMessageId(null);
+        toast.error("Failed to get response. Please try again later.");
+        setMessages((prev) => {
+          const hasAiMessage = prev.some((m) => m.id === aiId);
+          if (hasAiMessage) return prev; // partial response already shown, keep it
+          return [
+            ...prev,
+            {
+              id: aiId,
+              text: "Sorry, I'm having trouble connecting right now. Please try again later.",
+              isUser: false,
+              timestamp: new Date(),
+            },
+          ];
+        });
+        inputRef.current?.focus();
+      }
+    );
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -222,28 +260,52 @@ const ChatSection = () => {
                 {isServerOnline ? "online" : "offline"}
               </span>
             </span>
-            {/* Server status dot */}
-            <span
-              style={{
-                fontSize: "11px",
-                color: isServerOnline ? "var(--term-green)" : "var(--term-red)",
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
-              }}
-            >
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              {/* Server status dot */}
               <span
                 style={{
-                  width: "6px",
-                  height: "6px",
-                  borderRadius: "50%",
-                  backgroundColor: isServerOnline ? "var(--term-green)" : "var(--term-red)",
-                  display: "inline-block",
-                  animation: isServerOnline ? "neuralPulse 2s ease-in-out infinite" : "none",
+                  fontSize: "11px",
+                  color: isServerOnline ? "var(--term-green)" : "var(--term-red)",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
                 }}
-              />
-              {isServerOnline ? "server:online" : "server:offline"}
-            </span>
+              >
+                <span
+                  style={{
+                    width: "6px",
+                    height: "6px",
+                    borderRadius: "50%",
+                    backgroundColor: isServerOnline ? "var(--term-green)" : "var(--term-red)",
+                    display: "inline-block",
+                    animation: isServerOnline ? "neuralPulse 2s ease-in-out infinite" : "none",
+                  }}
+                />
+                {isServerOnline ? "server:online" : "server:offline"}
+              </span>
+              {/* Export button */}
+              <button
+                onClick={handleExport}
+                title="Export chat as Markdown"
+                style={{
+                  background: "transparent",
+                  border: "1px solid var(--term-border)",
+                  color: "var(--term-dim)",
+                  cursor: "pointer",
+                  padding: "2px 6px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  fontSize: "11px",
+                  fontFamily: "inherit",
+                  transition: "color 0.15s, border-color 0.15s",
+                }}
+                className="chat-quick-btn"
+              >
+                <Download size={11} />
+                export
+              </button>
+            </div>
           </div>
 
           {/* Header command */}
@@ -296,8 +358,7 @@ const ChatSection = () => {
               <div key={message.id} className="msg-slide-up">
                 <MessageBubble
                   message={message}
-                  isTyping={typingMessageId === message.id}
-                  onTypingComplete={() => setTypingMessageId(null)}
+                  isStreaming={streamingMessageId === message.id}
                 />
               </div>
             ))}
