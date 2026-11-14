@@ -1,3 +1,5 @@
+import { personalInfo } from "@/data/personalInfo";
+
 export type Lang = 'en' | 'zh';
 
 export const translations = {
@@ -19,7 +21,7 @@ export const translations = {
       github: 'github',
       linkedin: 'linkedin',
       skills: 'skills',
-      bio: "A Master's student in Computer Science at Boston University with strong background in AI. Experienced in developing end-to-end AI pipelines, computer vision, and machine learning algorithms.",
+      bio: personalInfo.background,
     },
     chat: {
       titleBar: 'AI Assistant v2.0',
@@ -97,7 +99,7 @@ export const translations = {
       github: 'github',
       linkedin: 'linkedin',
       skills: '技能',
-      bio: '波士顿大学计算机科学硕士在读，AI 方向背景扎实。擅长构建端到端 AI 系统、计算机视觉与机器学习算法。',
+      bio: '现于圣何塞的 TikTok 担任机器学习工程师，研究和开发用于视频理解与内容安全的多模态模型。拥有波士顿大学计算机科学硕士学位。',
     },
     chat: {
       titleBar: 'AI 助手 v2.0',

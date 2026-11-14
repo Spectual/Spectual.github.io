@@ -3,13 +3,13 @@ export const personalInfo = {
   title: "AI / ML Engineer",
   email: "baoyifei@bu.edu",
   phone: "+1 857 340 3064",
-  location: "Boston, MA",
+  location: "San Jose, CA",
   avatar: "/avatar.webp",
   social: {
     linkedin: "https://linkedin.com/in/yifei-bao-mscs",
     github: "https://github.com/spectual",
   },
-  background: "A Master's student in Computer Science at Boston University with strong background in AI. Experienced in developing end-to-end AI pipelines, computer vision, and machine learning algorithms.",
+  background: "Machine learning engineer at TikTok in San Jose, working on multimodal models for video understanding and content safety. I earned my M.S. in Computer Science from Boston University.",
   skills: [
     "Python",
     "PyTorch",
@@ -25,10 +25,16 @@ export const personalInfo = {
   ],
   experience: [
     {
+      title: "Machine Learning Engineer",
+      company: "TikTok",
+      duration: "Jan 2026 – Present",
+      description: "Develops multimodal models for video understanding and content safety.",
+    },
+    {
       title: "AI Engineer Intern",
       company: "DIET, Harvard University",
-      duration: "Aug 2025 – Present",
-      description: "Architected an agentic system and fine-tuned multimodal VLMs for artwork analysis at Harvard Arts Museum.",
+      duration: "Aug 2025 – Dec 2025",
+      description: "Architected an agentic system and fine-tuned multimodal VLMs for artwork analysis at Harvard Art Museums.",
     },
     {
       title: "Machine Learning Engineer Intern",
@@ -76,7 +82,7 @@ export const personalInfo = {
     {
       degree: "M.S. in Computer Science",
       school: "Boston University",
-      year: "Sep 2024 - Present"
+      year: "Sep 2024 – Jan 2026"
     },
     {
       degree: "B.Eng. in Artificial Intelligence",

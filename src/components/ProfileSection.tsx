@@ -59,7 +59,7 @@ const SkillBar = ({ name, level, delay, started }: { name: string; level: number
 
 // ── Auto-typing CLI demo ───────────────────────────────────────────────────
 const DEMO_COMMANDS: { cmd: string; output: string }[] = [
-  { cmd: "cat about.txt", output: "> ML Engineer | Boston, MA | 3+ yrs research" },
+  { cmd: "cat about.txt", output: `> ML Engineer | ${personalInfo.location} | Video understanding` },
   {
     cmd: "python train.py --model multimodal-llm",
     output: "Training...  Epoch 1/100  loss=0.342\nDone ✓  best_val_loss=0.184",
