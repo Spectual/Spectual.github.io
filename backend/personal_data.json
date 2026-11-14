@@ -3,8 +3,8 @@
     "name": "Yifei Bao",
     "title": "AI Engineer / ML Engineer",
     "email": "baoyifei@bu.edu",
-    "location": "Boston, MA",
-    "summary": "A Master's student in Computer Science at Boston University with a background in AI. Experienced in developing end-to-end AI pipelines, computer vision, and machine learning algorithms. Proven ability to lead research teams and deliver full-featured software solutions. Honored with multiple scholarships and holder of a patent in flood disaster prediction."
+    "location": "San Jose, CA",
+    "summary": "Machine learning engineer at TikTok in San Jose, working on multimodal models for video understanding and content safety. Holds an M.S. in Computer Science from Boston University."
   },
   "skills": {
     "professional": "Proficient in Python, Pytorch, Machine Learning techniques. Experience in LLM Application (Agent, RAG), Data Science, Computer Vision techniques and Git-based collaborative workflows.",
@@ -13,11 +13,20 @@
   },
   "experience": [
     {
+      "title": "Machine Learning Engineer",
+      "company": "TikTok",
+      "duration": "Jan 2026 – Present",
+      "location": "San Jose, CA",
+      "description": "Develops multimodal models for video understanding and content safety.",
+      "responsibilities": [],
+      "achievements": []
+    },
+    {
       "title": "AI Engineer Intern",
       "company": "DIET, Harvard University",
-      "duration": "Aug 2025 – Present",
+      "duration": "Aug 2025 – Dec 2025",
       "location": "Cambridge, MA",
-      "description": "Architecting agentic systems and fine-tuning multimodal VLMs for artwork analysis at Harvard Arts Museum.",
+      "description": "Architected agentic systems and fine-tuned multimodal VLMs for artwork analysis at Harvard Art Museums.",
       "responsibilities": [
         "Agentic System: Architected an interactive artwork image analysis agent that processes user-uploaded images, using an LLM-based planner to dynamically orchestrate 20+ vision & language models/APIs (Qwen-VL, BLIP-2, GPT-4o, Gemini, YOLOv8), producing structured metadata and descriptions; cut inference costs by 40% per request and improved speed by 58%.",
         "VLM Fine-Tuning: Fine-tuned a multimodal VLM (Qwen2.5-VL-7B) on the human-annotated artwork description dataset using SFT with LoRA techniques, using training optimization strategies such as warm-up scheduling, cosine LR decay, BF16 mixed precision training, and gradient accumulation. Applied multimodal models (ViT, Qwen-VL) on 385K+ high-resolution artwork images, generating 70M+ tags/descriptions."
@@ -60,7 +69,7 @@
     {
       "name": "Interactive Artwork Image Analysis Agent",
       "role": "AI Engineer Intern at DIET, Harvard University",
-      "duration": "Aug 2025 – Present",
+      "duration": "Aug 2025 – Dec 2025",
       "description": "Architected an agentic system that orchestrates 20+ V&L models/APIs to analyze user-uploaded artwork images, generating structured metadata and descriptions while reducing cost by 40% and improving speed by 58%.",
       "technologies": ["Agentic System", "Qwen-VL", "BLIP-2", "GPT-4o", "Gemini", "YOLOv8"],
       "impact": "Production-ready pipeline with significant latency and cost improvements.",
@@ -69,7 +78,7 @@
     {
       "name": "Multimodal VLM Fine-Tuning for Artwork Description",
       "role": "AI Engineer Intern at DIET, Harvard University",
-      "duration": "Aug 2025 – Present",
+      "duration": "Aug 2025 – Dec 2025",
       "description": "Fine-tuned Qwen2.5-VL-7B with LoRA on curated artwork datasets; leveraged ViT and Qwen-VL across 385K+ images to generate 70M+ tags/descriptions with optimized training strategies (warm-up, cosine decay, BF16, grad accumulation).",
       "technologies": ["Qwen2.5-VL-7B", "LoRA", "SFT", "BF16", "Cosine LR Decay", "Warm-up", "Gradient Accumulation", "ViT"],
       "impact": "Large-scale multimodal tagging and description generation.",
@@ -89,8 +98,8 @@
     {
       "degree": "M.S. in Computer Science",
       "school": "Boston University",
-      "year": "Sep 2024 - Present",
-      "gpa": "3.95 / 4.0",
+      "year": "Sep 2024 – Jan 2026",
+      "gpa": "3.96 / 4.0",
       "relevantCourses": ["Machine Learning", "Deep Learning", "Data Science", "Object-oriented Software Design"]
     },
     {
